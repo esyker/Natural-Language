@@ -1,0 +1,4 @@
+# arc format: src dest ilabel olabel [weight]
+# final state format: state [weight]
+# lines may occur in any order except initial state must be first line
+# unspecified weights default to 0.0 (for the library-default Weight type)

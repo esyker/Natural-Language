@@ -25,6 +25,12 @@ fstcompose compiled/08.fst compiled/d2dd.fst | fstshortestpath > compiled/d2dd_0
 echo "Testing the transducer 'd2dd' with the input 'tests/62.txt' (generating pdf)"
 fstcompose compiled/62.fst compiled/d2dd.fst | fstshortestpath > compiled/d2dd_62.fst
 
+echo "Testing the transducer 'd2dd' with the input 'tests/753.txt' (generating pdf)"
+fstcompose compiled/753.fst compiled/d2dd.fst | fstshortestpath > compiled/d2dd_753.fst
+
+echo "Testing the transducer 'd2dd' with the input 'tests/8000.txt' (generating pdf)"
+fstcompose compiled/8000.fst compiled/d2dd.fst | fstshortestpath > compiled/d2dd_8000.fst
+
 echo "Testing the transducer 'd2dddd' with the input 'tests/8.txt' (generating pdf)"
 fstcompose compiled/8.fst compiled/d2dddd.fst | fstshortestpath > compiled/d2dddd_8.fst
 
@@ -76,6 +82,12 @@ fstcompose compiled/08.fst compiled/d2dd.fst | fstshortestpath | fstproject --pr
 
 echo "Testing the transducer 'd2dd' with the input 'tests/62.txt' (stdout)"
 fstcompose compiled/62.fst compiled/d2dd.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'd2dd' with the input 'tests/753.txt' (stdout)"
+fstcompose compiled/753.fst compiled/d2dd.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'd2dd' with the input 'tests/8000.txt' (stdout)"
+fstcompose compiled/8000.fst compiled/d2dd.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
 echo "Testing the transducer 'd2dddd' with the input 'tests/8.txt' (stdout)"
 fstcompose compiled/8.fst compiled/d2dddd.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt

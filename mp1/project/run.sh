@@ -16,6 +16,16 @@ fstcompose compiled/test_mm2mmm.fst compiled/mm2mmm.fst | fstshortestpath > comp
 echo "Testing the transducer 'd2dd' with the input 'tests/test_d2dd.txt' (generating pdf)"
 fstcompose compiled/test_d2dd.fst compiled/d2dd.fst | fstshortestpath > compiled/result_d2dd.fst
 
+echo "Testing the transducer 'd2dd' with the input 'tests/8.txt' (generating pdf)"
+fstcompose compiled/8.fst compiled/d2dd.fst | fstshortestpath > compiled/d2dd_8.fst
+
+echo "Testing the transducer 'd2dd' with the input 'tests/8.txt' (generating pdf)"
+fstcompose compiled/08.fst compiled/d2dd.fst | fstshortestpath > compiled/d2dd_08.fst
+
+echo "Testing the transducer 'd2dd' with the input 'tests/8.txt' (generating pdf)"
+fstcompose compiled/80.fst compiled/d2dd.fst | fstshortestpath > compiled/d2dd_80.fst
+
+
 for i in compiled/*.fst; do
 	echo "Creating image: images/$(basename $i '.fst').pdf"
     fstdraw --portrait --isymbols=syms.txt --osymbols=syms.txt $i | dot -Tpdf > images/$(basename $i '.fst').pdf
@@ -26,6 +36,16 @@ fstcompose compiled/test_mm2mmm.fst compiled/mm2mmm.fst | fstshortestpath | fstp
 
 echo "Testing the transducer 'd2dd' with the input 'tests/test_d2dd.txt' (stdout)"
 fstcompose compiled/test_d2dd.fst compiled/d2dd.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'd2dd' with the input 'tests/test_d2dd.txt' (stdout)"
+fstcompose compiled/8.fst compiled/d2dd.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'd2dd' with the input 'tests/test_d2dd.txt' (stdout)"
+fstcompose compiled/08.fst compiled/d2dd.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'd2dd' with the input 'tests/test_d2dd.txt' (stdout)"
+fstcompose compiled/80.fst compiled/d2dd.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
 
 echo "Testing the transducer 'copy' with the input 'tests/copy.txt' (stdout)"
 fstcompose compiled/copy.fst compiled/copy.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt

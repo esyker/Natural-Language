@@ -46,6 +46,12 @@ fstcompose compiled/8.fst compiled/copy.fst | fstshortestpath > compiled/copy_8.
 echo "Testing the transducer 'copy' with the input 'tests/62.txt' (generating pdf)"
 fstcompose compiled/62.fst compiled/copy.fst | fstshortestpath > compiled/copy_62.fst
 
+echo "Testing the transducer 'skip' with the input 'tests/8.txt' (generating pdf)"
+fstcompose compiled/8.fst compiled/skip.fst | fstshortestpath > compiled/skip_8.fst
+
+echo "Testing the transducer 'skip' with the input 'tests/62.txt' (generating pdf)"
+fstcompose compiled/62.fst compiled/skip.fst | fstshortestpath > compiled/skip_62.fst
+
 
 
 for i in compiled/*.fst; do
@@ -92,3 +98,9 @@ fstcompose compiled/62.fst compiled/copy.fst | fstshortestpath | fstproject --pr
 
 echo "Testing the transducer 'skip' with the input 'tests/skip.txt' (stdout)"
 fstcompose compiled/test_skip.fst compiled/skip.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'skip' with the input 'tests/8.txt' (stdout)"
+fstcompose compiled/8.fst compiled/skip.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'skip' with the input 'tests/62.txt' (stdout)"
+fstcompose compiled/62.fst compiled/skip.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt

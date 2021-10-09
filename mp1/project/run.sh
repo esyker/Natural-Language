@@ -52,6 +52,8 @@ fstcompose compiled/8.fst compiled/skip.fst | fstshortestpath > compiled/skip_8.
 echo "Testing the transducer 'skip' with the input 'tests/62.txt' (generating pdf)"
 fstcompose compiled/62.fst compiled/skip.fst | fstshortestpath > compiled/skip_62.fst
 
+echo "Testing the transducer 'date2year' with the input 'tests/08_09_2013.txt' (generating pdf)"
+fstcompose compiled/08_09_2013.fst compiled/date2year.fst | fstshortestpath > compiled/date2year_08_09_2013.fst
 
 
 for i in compiled/*.fst; do
@@ -104,3 +106,6 @@ fstcompose compiled/8.fst compiled/skip.fst | fstshortestpath | fstproject --pro
 
 echo "Testing the transducer 'skip' with the input 'tests/62.txt' (stdout)"
 fstcompose compiled/62.fst compiled/skip.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'date2year' with the input 'tests/08_09_2013.txt' (stdout)"
+fstcompose compiled/08_09_2013.fst compiled/date2year.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt

@@ -40,6 +40,13 @@ fstcompose compiled/753.fst compiled/d2dddd.fst | fstshortestpath > compiled/d2d
 echo "Testing the transducer 'd2dddd' with the input 'tests/8000.txt' (generating pdf)"
 fstcompose compiled/8000.fst compiled/d2dddd.fst | fstshortestpath > compiled/d2dddd_8000.fst
 
+echo "Testing the transducer 'copy' with the input 'tests/8.txt' (generating pdf)"
+fstcompose compiled/8.fst compiled/copy.fst | fstshortestpath > compiled/copy_8.fst
+
+echo "Testing the transducer 'copy' with the input 'tests/62.txt' (generating pdf)"
+fstcompose compiled/62.fst compiled/copy.fst | fstshortestpath > compiled/copy_62.fst
+
+
 
 for i in compiled/*.fst; do
 	echo "Creating image: images/$(basename $i '.fst').pdf"
@@ -77,9 +84,11 @@ fstcompose compiled/753.fst compiled/d2dddd.fst | fstshortestpath | fstproject -
 echo "Testing the transducer 'd2dddd' with the input 'tests/8000.txt' (stdout)"
 fstcompose compiled/8000.fst compiled/d2dddd.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
+echo "Testing the transducer 'copy' with the input 'tests/8.txt' (stdout)"
+fstcompose compiled/8.fst compiled/copy.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
-echo "Testing the transducer 'copy' with the input 'tests/copy.txt' (stdout)"
-fstcompose compiled/copy.fst compiled/copy.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+echo "Testing the transducer 'copy' with the input 'tests/62.txt' (stdout)"
+fstcompose compiled/62.fst compiled/copy.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
 echo "Testing the transducer 'skip' with the input 'tests/skip.txt' (stdout)"
 fstcompose compiled/test_skip.fst compiled/skip.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt

@@ -26,3 +26,9 @@ fstcompose compiled/test_mm2mmm.fst compiled/mm2mmm.fst | fstshortestpath | fstp
 
 echo "Testing the transducer 'd2dd' with the input 'tests/test_d2dd.txt' (stdout)"
 fstcompose compiled/test_d2dd.fst compiled/d2dd.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'copy' with the input 'tests/copy.txt' (stdout)"
+fstcompose compiled/copy.fst compiled/copy.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'skip' with the input 'tests/skip.txt' (stdout)"
+fstcompose compiled/test_skip.fst compiled/skip.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt

@@ -67,26 +67,26 @@ fstcompose compiled/62.fst compiled/skip.fst | fstshortestpath > compiled/skip_6
 echo "Testing the transducer 'date2year' with the input 'tests/08_09_2013.txt' (generating pdf)"
 fstcompose compiled/08_09_2013.fst compiled/date2year.fst | fstshortestpath > compiled/date2year_08_09_2013.fst
 
-echo "Testing the transducer 'r2a' with the input 'tests/I.txt' (generating pdf)"
-fstcompose compiled/I.fst compiled/r2a.fst | fstshortestpath > compiled/r2a_I.fst
+echo "Testing the transducer 'R2A' with the input 'tests/I.txt' (generating pdf)"
+fstcompose compiled/I.fst compiled/R2A.fst | fstshortestpath > compiled/r2a_I.fst
 
-echo "Testing the transducer 'r2a' with the input 'tests/XL.txt' (generating pdf)"
-fstcompose compiled/XL.fst compiled/r2a.fst | fstshortestpath > compiled/r2a_XL.fst
+echo "Testing the transducer 'R2A' with the input 'tests/XL.txt' (generating pdf)"
+fstcompose compiled/XL.fst compiled/R2A.fst | fstshortestpath > compiled/r2a_XL.fst
 
-echo "Testing the transducer 'r2a' with the input 'tests/CM.txt' (generating pdf)"
-fstcompose compiled/CM.fst compiled/r2a.fst | fstshortestpath > compiled/r2a_CM.fst
+echo "Testing the transducer 'R2A' with the input 'tests/CM.txt' (generating pdf)"
+fstcompose compiled/CM.fst compiled/R2A.fst | fstshortestpath > compiled/r2a_CM.fst
 
-echo "Testing the transducer 'r2a' with the input 'tests/VIII.txt' (generating pdf)"
-fstcompose compiled/VIII.fst compiled/r2a.fst | fstshortestpath > compiled/r2a_VIII.fst
+echo "Testing the transducer 'R2A' with the input 'tests/VIII.txt' (generating pdf)"
+fstcompose compiled/VIII.fst compiled/R2A.fst | fstshortestpath > compiled/r2a_VIII.fst
 
-echo "Testing the transducer 'r2a' with the input 'tests/CIX.txt' (generating pdf)"
-fstcompose compiled/CIX.fst compiled/r2a.fst | fstshortestpath > compiled/r2a_CIX.fst
+echo "Testing the transducer 'R2A' with the input 'tests/CIX.txt' (generating pdf)"
+fstcompose compiled/CIX.fst compiled/R2A.fst | fstshortestpath > compiled/r2a_CIX.fst
 
-echo "Testing the transducer 'r2a' with the input 'tests/MMXIII.txt' (generating pdf)"
-fstcompose compiled/MMXIII.fst compiled/r2a.fst | fstshortestpath > compiled/r2a_MMXIII.fst
+echo "Testing the transducer 'R2A' with the input 'tests/MMXIII.txt' (generating pdf)"
+fstcompose compiled/MMXIII.fst compiled/R2A.fst | fstshortestpath > compiled/r2a_MMXIII.fst
 
-echo "Testing the transducer 'r2a' with the input 'tests/MMMCMXCIX.txt' (generating pdf)"
-fstcompose compiled/MMMCMXCIX.fst compiled/r2a.fst | fstshortestpath > compiled/r2a_MMMCMXCIX.fst
+echo "Testing the transducer 'R2A' with the input 'tests/MMMCMXCIX.txt' (generating pdf)"
+fstcompose compiled/MMMCMXCIX.fst compiled/R2A.fst | fstshortestpath > compiled/r2a_MMMCMXCIX.fst
 
 
 for i in compiled/*.fst; do
@@ -155,23 +155,23 @@ fstcompose compiled/62.fst compiled/skip.fst | fstshortestpath | fstproject --pr
 echo "Testing the transducer 'date2year' with the input 'tests/08_09_2013.txt' (stdout)"
 fstcompose compiled/08_09_2013.fst compiled/date2year.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
-echo "Testing the transducer 'r2a' with the input 'tests/I.txt' (stdout)"
-fstcompose compiled/I.fst compiled/r2a.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+echo "Testing the transducer 'R2A' with the input 'tests/I.txt' (stdout)"
+fstcompose compiled/I.fst compiled/R2A.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
-echo "Testing the transducer 'r2a' with the input 'tests/XL.txt' (stdout)"
-fstcompose compiled/XL.fst compiled/r2a.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+echo "Testing the transducer 'R2A' with the input 'tests/XL.txt' (stdout)"
+fstcompose compiled/XL.fst compiled/R2A.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
-echo "Testing the transducer 'r2a' with the input 'tests/CM.txt' (stdout)"
-fstcompose compiled/CM.fst compiled/r2a.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+echo "Testing the transducer 'R2A' with the input 'tests/CM.txt' (stdout)"
+fstcompose compiled/CM.fst compiled/R2A.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
-echo "Testing the transducer 'r2a' with the input 'tests/VIII.txt' (stdout)"
-fstcompose compiled/VIII.fst compiled/r2a.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+echo "Testing the transducer 'R2A' with the input 'tests/VIII.txt' (stdout)"
+fstcompose compiled/VIII.fst compiled/R2A.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
-echo "Testing the transducer 'r2a' with the input 'tests/CIX.txt' (stdout)"
-fstcompose compiled/CIX.fst compiled/r2a.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+echo "Testing the transducer 'R2A' with the input 'tests/CIX.txt' (stdout)"
+fstcompose compiled/CIX.fst compiled/R2A.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
-echo "Testing the transducer 'r2a' with the input 'tests/MMXIII.txt' (stdout)"
-fstcompose compiled/MMXIII.fst compiled/r2a.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+echo "Testing the transducer 'R2A' with the input 'tests/MMXIII.txt' (stdout)"
+fstcompose compiled/MMXIII.fst compiled/R2A.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
-echo "Testing the transducer 'r2a' with the input 'tests/MMMCMXCIX.txt' (stdout)"
-fstcompose compiled/MMMCMXCIX.fst compiled/r2a.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+echo "Testing the transducer 'R2A' with the input 'tests/MMMCMXCIX.txt' (stdout)"
+fstcompose compiled/MMMCMXCIX.fst compiled/R2A.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt

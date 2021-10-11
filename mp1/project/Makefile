@@ -1,5 +1,5 @@
 make:
-	./run.sh
+	./run_catarina.sh
 
 clean:
 	rm -rf images/

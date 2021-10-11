@@ -7,6 +7,8 @@ for i in sources/*.txt tests/*.txt; do
     fstcompile --isymbols=syms.txt --osymbols=syms.txt $i | fstarcsort > compiled/$(basename $i ".txt").fst
 done
 
+echo "Compiling A2R"
+fstreverse compiled/R2A.fst > compiled/A2R.fst
 
 # TODO
 
@@ -175,3 +177,6 @@ fstcompose compiled/MMXIII.fst compiled/R2A.fst | fstshortestpath | fstproject -
 
 echo "Testing the transducer 'R2A' with the input 'tests/MMMCMXCIX.txt' (stdout)"
 fstcompose compiled/MMMCMXCIX.fst compiled/R2A.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'A2R' with the input 'tests/3999.txt' (stdout)"
+fstcompose compiled/3999.fst compiled/A2R.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt

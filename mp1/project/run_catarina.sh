@@ -2,10 +2,15 @@
 
 mkdir -p compiled images
 
+part_2_transducers = 
+
 for i in sources/*.txt tests/*.txt; do
 	echo "Compiling: $i"
     fstcompile --isymbols=syms.txt --osymbols=syms.txt $i | fstarcsort > compiled/$(basename $i ".txt").fst
 done
+
+echo 
+fstreverse A.fst > C.fst
 
 
 # TODO

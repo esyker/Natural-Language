@@ -2,15 +2,13 @@
 
 mkdir -p compiled images
 
-part_2_transducers = 
-
 for i in sources/*.txt tests/*.txt; do
 	echo "Compiling: $i"
     fstcompile --isymbols=syms.txt --osymbols=syms.txt $i | fstarcsort > compiled/$(basename $i ".txt").fst
 done
 
-echo 
-fstreverse A.fst > C.fst
+echo "Compiling A2R"
+fstreverse compiled/R2A.fst > compiled/A2R.fst
 
 
 # TODO
@@ -180,3 +178,6 @@ fstcompose compiled/MMXIII.fst compiled/R2A.fst | fstshortestpath | fstproject -
 
 echo "Testing the transducer 'R2A' with the input 'tests/MMMCMXCIX.txt' (stdout)"
 fstcompose compiled/MMMCMXCIX.fst compiled/R2A.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'A2R' with the input 'tests/3999.txt' (stdout)"
+fstcompose compiled/3999.fst compiled/A2R.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt

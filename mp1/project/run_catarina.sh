@@ -8,7 +8,7 @@ for i in sources/*.txt tests/*.txt; do
 done
 
 echo "Compiling A2R"
-fstreverse compiled/R2A.fst > compiled/A2R.fst
+fstinvert compiled/R2A.fst > compiled/A2R.fst
 
 
 # TODO

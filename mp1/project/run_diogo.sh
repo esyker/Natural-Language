@@ -10,10 +10,12 @@ done
 echo "Compiling A2R"
 fstinvert compiled/R2A.fst > compiled/A2R.fst
 
+
 # TODO
 
 echo "Testing the transducer 'mm2mmm' with the input 'tests/test_mm2mmm.txt' (generating pdf)"
 fstcompose compiled/test_mm2mmm.fst compiled/mm2mmm.fst | fstshortestpath > compiled/result_mm2mmm.fst
+
 
 echo "Testing the transducer 'd2dd' with the input 'tests/test_d2dd.txt' (generating pdf)"
 fstcompose compiled/test_d2dd.fst compiled/d2dd.fst | fstshortestpath > compiled/result_d2dd.fst
@@ -36,6 +38,7 @@ fstcompose compiled/8000.fst compiled/d2dd.fst | fstshortestpath > compiled/d2dd
 echo "Testing the transducer 'd2dd' with the input 'tests/876543.txt' (generating pdf)"
 fstcompose compiled/876543.fst compiled/d2dd.fst | fstshortestpath > compiled/d2dd_876543.fst
 
+
 echo "Testing the transducer 'd2dddd' with the input 'tests/8.txt' (generating pdf)"
 fstcompose compiled/8.fst compiled/d2dddd.fst | fstshortestpath > compiled/d2dddd_8.fst
 
@@ -54,11 +57,13 @@ fstcompose compiled/8000.fst compiled/d2dddd.fst | fstshortestpath > compiled/d2
 echo "Testing the transducer 'd2dddd' with the input 'tests/876543.txt' (generating pdf)"
 fstcompose compiled/876543.fst compiled/d2dddd.fst | fstshortestpath > compiled/d2dddd_876543.fst
 
+
 echo "Testing the transducer 'copy' with the input 'tests/8.txt' (generating pdf)"
 fstcompose compiled/8.fst compiled/copy.fst | fstshortestpath > compiled/copy_8.fst
 
 echo "Testing the transducer 'copy' with the input 'tests/62.txt' (generating pdf)"
 fstcompose compiled/62.fst compiled/copy.fst | fstshortestpath > compiled/copy_62.fst
+
 
 echo "Testing the transducer 'skip' with the input 'tests/8.txt' (generating pdf)"
 fstcompose compiled/8.fst compiled/skip.fst | fstshortestpath > compiled/skip_8.fst
@@ -66,8 +71,23 @@ fstcompose compiled/8.fst compiled/skip.fst | fstshortestpath > compiled/skip_8.
 echo "Testing the transducer 'skip' with the input 'tests/62.txt' (generating pdf)"
 fstcompose compiled/62.fst compiled/skip.fst | fstshortestpath > compiled/skip_62.fst
 
+
 echo "Testing the transducer 'date2year' with the input 'tests/08_09_2013.txt' (generating pdf)"
 fstcompose compiled/08_09_2013.fst compiled/date2year.fst | fstshortestpath > compiled/date2year_08_09_2013.fst
+
+
+echo "Testing the transducer 'leap' with the input 'tests/1901.txt' (generating pdf)"
+fstcompose compiled/1901.fst compiled/leap.fst | fstshortestpath > compiled/leap_1901.fst
+
+echo "Testing the transducer 'leap' with the input 'tests/1904.txt' (generating pdf)"
+fstcompose compiled/1904.fst compiled/leap.fst | fstshortestpath > compiled/leap_1904.fst
+
+echo "Testing the transducer 'leap' with the input 'tests/2000.txt' (generating pdf)"
+fstcompose compiled/2000.fst compiled/leap.fst | fstshortestpath > compiled/leap_2000.fst
+
+echo "Testing the transducer 'leap' with the input 'tests/2099.txt' (generating pdf)"
+fstcompose compiled/2099.fst compiled/leap.fst | fstshortestpath > compiled/leap_2099.fst
+
 
 echo "Testing the transducer 'R2A' with the input 'tests/I.txt' (generating pdf)"
 fstcompose compiled/I.fst compiled/R2A.fst | fstshortestpath > compiled/r2a_I.fst
@@ -121,6 +141,7 @@ fstcompose compiled/8000.fst compiled/d2dd.fst | fstshortestpath | fstproject --
 echo "Testing the transducer 'd2dd' with the input 'tests/876543.txt' (stdout)"
 fstcompose compiled/876543.fst compiled/d2dd.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
+
 echo "Testing the transducer 'd2dddd' with the input 'tests/8.txt' (stdout)"
 fstcompose compiled/8.fst compiled/d2dddd.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
@@ -139,11 +160,13 @@ fstcompose compiled/8000.fst compiled/d2dddd.fst | fstshortestpath | fstproject 
 echo "Testing the transducer 'd2dddd' with the input 'tests/876543.txt' (stdout)"
 fstcompose compiled/876543.fst compiled/d2dddd.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
+
 echo "Testing the transducer 'copy' with the input 'tests/8.txt' (stdout)"
 fstcompose compiled/8.fst compiled/copy.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
 echo "Testing the transducer 'copy' with the input 'tests/62.txt' (stdout)"
 fstcompose compiled/62.fst compiled/copy.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
 
 echo "Testing the transducer 'skip' with the input 'tests/skip.txt' (stdout)"
 fstcompose compiled/test_skip.fst compiled/skip.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
@@ -154,8 +177,23 @@ fstcompose compiled/8.fst compiled/skip.fst | fstshortestpath | fstproject --pro
 echo "Testing the transducer 'skip' with the input 'tests/62.txt' (stdout)"
 fstcompose compiled/62.fst compiled/skip.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
+
 echo "Testing the transducer 'date2year' with the input 'tests/08_09_2013.txt' (stdout)"
 fstcompose compiled/08_09_2013.fst compiled/date2year.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+
+echo "Testing the transducer 'leap' with the input 'tests/1901.txt' (stdout)"
+fstcompose compiled/1901.fst compiled/leap.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'leap' with the input 'tests/1904.txt' (stdout)"
+fstcompose compiled/1904.fst compiled/leap.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'leap' with the input 'tests/2000.txt' (stdout)"
+fstcompose compiled/2000.fst compiled/leap.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'leap' with the input 'tests/2099.txt' (stdout)"
+fstcompose compiled/2099.fst compiled/leap.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
 
 echo "Testing the transducer 'R2A' with the input 'tests/I.txt' (stdout)"
 fstcompose compiled/I.fst compiled/R2A.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
@@ -177,6 +215,7 @@ fstcompose compiled/MMXIII.fst compiled/R2A.fst | fstshortestpath | fstproject -
 
 echo "Testing the transducer 'R2A' with the input 'tests/MMMCMXCIX.txt' (stdout)"
 fstcompose compiled/MMMCMXCIX.fst compiled/R2A.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
 
 echo "Testing the transducer 'A2R' with the input 'tests/3999.txt' (stdout)"
 fstcompose compiled/3999.fst compiled/A2R.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt

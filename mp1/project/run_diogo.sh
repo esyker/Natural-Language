@@ -10,6 +10,9 @@ done
 echo "Compiling A2R"
 fstinvert compiled/R2A.fst > compiled/A2R.fst
 
+echo "Compiling birthR2A"
+fstcompose compiled/R2A.fst compiled/copy.fst | fstcompose compiled/R2A.fst compiled/copy.fst | fstcompose compiled/R2A.fst compiled/copy.fst  > compiled/birthR2A.fst
+
 
 # TODO
 
@@ -219,3 +222,6 @@ fstcompose compiled/MMMCMXCIX.fst compiled/R2A.fst | fstshortestpath | fstprojec
 
 echo "Testing the transducer 'A2R' with the input 'tests/3999.txt' (stdout)"
 fstcompose compiled/3999.fst compiled/A2R.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'birthR2A' with the input 'tests/IV_V_MMMCMXCIX.txt' (stdout)"
+fstcompose compiled/IV_V_MMMCMXCIX.fst compiled/birthR2A.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt

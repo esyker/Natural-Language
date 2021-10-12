@@ -38,7 +38,7 @@ fstconcat compiled/day_.fst compiled/month_.fst compiled/day_month_.fst
 fstconcat compiled/day_month_.fst compiled/dddd2R.fst compiled/birthT2R.fst
 
 echo "Compiling mytest"
-cp compiled/mmm2R.fst compiled/mytest.fst
+cp compiled/dd2d.fst compiled/mytest.fst
 
 # TODO
 

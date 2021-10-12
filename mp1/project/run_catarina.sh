@@ -17,8 +17,13 @@ fstconcat compiled/day.fst compiled/copy.fst compiled/day_.fst
 fstconcat compiled/day_.fst compiled/day_.fst compiled/month.fst
 fstconcat compiled/month.fst compiled/year.fst compiled/birthR2A.fst
 
-echo "Testing the transducer 'birthR2A' with the input 'tests/VIII.txt' (stdout)"
-fstcompose compiled/VIII_IX_CCCXIII.fst compiled/birthR2A.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+echo "Compiling birthA2T"
+fstclosure compiled/copy.fst compiled/copy_multiple.fst
+fstconcat compiled/copy.fst compiled/copy.fst compiled/copy_day.fst
+fstconcat compiled/copy_day.fst compiled/copy.fst compiled/copy_day_.fst
+fstconcat compiled/copy_day_.fst compiled/mm2mmm.fst compiled/mmm.fst
+fstconcat compiled/mmm.fst compiled/copy_multiple.fst compiled/birthA2T.fst
+
 
 
 # TODO
@@ -230,5 +235,23 @@ echo "Testing the transducer 'R2A' with the input 'tests/MMMCMXCIX.txt' (stdout
 fstcompose compiled/MMMCMXCIX.fst compiled/R2A.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
 
+echo "Testing the transducer 'A2R' with the input 'tests/8.txt' (stdout)"
+fstcompose compiled/8.fst compiled/A2R.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'A2R' with the input 'tests/109.txt' (stdout)"
+fstcompose compiled/109.fst compiled/A2R.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'A2R' with the input 'tests/2013.txt' (stdout)"
+fstcompose compiled/2013.fst compiled/A2R.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
 echo "Testing the transducer 'A2R' with the input 'tests/3999.txt' (stdout)"
 fstcompose compiled/3999.fst compiled/A2R.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+
+echo "Testing the transducer 'birthR2A' with the input 'tests/VIII.txt' (stdout)"
+fstcompose compiled/VIII_IX_CCCXIII.fst compiled/birthR2A.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+
+echo "Testing the transducer 'birthA2T' with the input 'tests/08_09_0313.txt' (stdout)"
+fstcompose compiled/08_09_0313.fst compiled/birthA2T.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+

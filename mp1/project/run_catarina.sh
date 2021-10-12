@@ -10,6 +10,16 @@ done
 echo "Compiling A2R"
 fstinvert compiled/R2A.fst > compiled/A2R.fst
 
+echo "Compiling birthR2A"
+fstcompose compiled/R2A.fst compiled/d2dd.fst compiled/day.fst
+fstcompose compiled/R2A.fst compiled/d2dddd.fst compiled/year.fst
+fstconcat compiled/day.fst compiled/copy.fst compiled/day_.fst
+fstconcat compiled/day_.fst compiled/day_.fst compiled/month.fst
+fstconcat compiled/month.fst compiled/year.fst compiled/birthR2A.fst
+
+echo "Testing the transducer 'birthR2A' with the input 'tests/VIII.txt' (stdout)"
+fstcompose compiled/VIII_IX_CCCXIII.fst compiled/birthR2A.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
 
 # TODO
 
@@ -153,6 +163,9 @@ fstcompose compiled/62.fst compiled/d2dddd.fst | fstshortestpath | fstproject --
 
 echo "Testing the transducer 'd2dddd' with the input 'tests/753.txt' (stdout)"
 fstcompose compiled/753.fst compiled/d2dddd.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'd2dddd' with the input 'tests/313.txt' (stdout)"
+fstcompose compiled/313.fst compiled/d2dddd.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
 echo "Testing the transducer 'd2dddd' with the input 'tests/8000.txt' (stdout)"
 fstcompose compiled/8000.fst compiled/d2dddd.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt

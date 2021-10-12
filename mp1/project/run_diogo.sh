@@ -25,12 +25,20 @@ fstconcat compiled/copy_day_.fst compiled/mm2mmm.fst compiled/mmm.fst
 fstconcat compiled/mmm.fst compiled/copy_multiple.fst compiled/birthA2T.fst
 
 echo "Compiling birthT2R"
-fstinvert compiled/mm2mmm.fst compiled/mmm2mm.fst
-fstcompose compiled/mmm2mm.fst compiled/A2R.fst compiled/mmm2R.fst
-fstconcat compiled/A2R.fst compiled/copy.fst compiled/day_.fst
+fstinvert compiled/mm2mmm.fst > compiled/mmm2mm.fst
+fstinvert compiled/d2dd.fst > compiled/dd2d.fst
+fstinvert compiled/d2dddd.fst > compiled/dddd2d.fst
+fstcompose compiled/mmm2mm.fst compiled/dd2d.fst compiled/mmm2d.fst
+fstcompose compiled/mmm2d compiled/A2R.fst compiled/mmm2R.fst
+fstcompose compiled/dd2d.fst compiled/A2R.fst compiled/dd2R.fst
+fstcompose compiled/dddd2d.fst compiled/A2R.fst compiled/dddd2R.fst
+fstconcat compiled/dd2R.fst compiled/copy.fst compiled/day_.fst
 fstconcat compiled/mmm2R.fst compiled/copy.fst compiled/month_.fst
 fstconcat compiled/day_.fst compiled/month_.fst compiled/day_month_.fst
-fstconcat compiled/day_month_.fst compiled/A2R.fst compiled/birthT2R.fst
+fstconcat compiled/day_month_.fst compiled/dddd2R.fst compiled/birthT2R.fst
+
+echo "Compiling mytest"
+cp compiled/mmm2R.fst compiled/mytest.fst
 
 # TODO
 
@@ -261,3 +269,5 @@ fstcompose compiled/08_09_0313.fst compiled/birthA2T.fst | fstshortestpath | fst
 echo "Testing the transducer 'birthT2R' with the input 'tests/86976.txt' (stdout)"
 fstcompose compiled/86976.fst compiled/birthT2R.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
+echo "Testing the transducer 'mytest' with the input 'tests/test_mytest.txt' (stdout)"
+fstcompose compiled/test_mytest.fst compiled/mytest.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt

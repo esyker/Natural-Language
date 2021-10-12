@@ -11,7 +11,7 @@ echo "Compiling A2R"
 fstinvert compiled/R2A.fst > compiled/A2R.fst
 
 echo "Compiling birthR2A"
-fstcompose compiled/R2A.fst compiled/copy.fst | fstcompose compiled/R2A.fst compiled/copy.fst | fstcompose compiled/R2A.fst compiled/copy.fst  > compiled/birthR2A.fst
+fstconcat compiled/R2A.fst compiled/copy.fst | fstconcat compiled/R2A.fst > compiled/birthR2A.fst
 
 
 # TODO

@@ -42,6 +42,13 @@ fstcompose compiled/birthR2year.fst compiled/leap.fst compiled/birthR2L.fst
 
 # TODO
 
+echo "Testing the transducer 'mm2mmm' with the input 'tests/test_mm2mmm.txt' (generating pdf)"
+fstcompose compiled/test_mm2mmm.fst compiled/mm2mmm.fst | fstshortestpath > compiled/result_mm2mmm.fst
+
+
+echo "Testing the transducer 'd2dd' with the input 'tests/test_d2dd.txt' (generating pdf)"
+fstcompose compiled/test_d2dd.fst compiled/d2dd.fst | fstshortestpath > compiled/result_d2dd.fst
+
 echo "Testing the transducer 'd2dd' with the input 'tests/8.txt' (generating pdf)"
 fstcompose compiled/8.fst compiled/d2dd.fst | fstshortestpath > compiled/d2dd_8.fst
 
@@ -59,6 +66,7 @@ fstcompose compiled/8000.fst compiled/d2dd.fst | fstshortestpath > compiled/d2dd
 
 echo "Testing the transducer 'd2dd' with the input 'tests/876543.txt' (generating pdf)"
 fstcompose compiled/876543.fst compiled/d2dd.fst | fstshortestpath > compiled/d2dd_876543.fst
+
 
 echo "Testing the transducer 'd2dddd' with the input 'tests/8.txt' (generating pdf)"
 fstcompose compiled/8.fst compiled/d2dddd.fst | fstshortestpath > compiled/d2dddd_8.fst
@@ -78,11 +86,13 @@ fstcompose compiled/8000.fst compiled/d2dddd.fst | fstshortestpath > compiled/d2
 echo "Testing the transducer 'd2dddd' with the input 'tests/876543.txt' (generating pdf)"
 fstcompose compiled/876543.fst compiled/d2dddd.fst | fstshortestpath > compiled/d2dddd_876543.fst
 
+
 echo "Testing the transducer 'copy' with the input 'tests/8.txt' (generating pdf)"
 fstcompose compiled/8.fst compiled/copy.fst | fstshortestpath > compiled/copy_8.fst
 
 echo "Testing the transducer 'copy' with the input 'tests/62.txt' (generating pdf)"
 fstcompose compiled/62.fst compiled/copy.fst | fstshortestpath > compiled/copy_62.fst
+
 
 echo "Testing the transducer 'skip' with the input 'tests/8.txt' (generating pdf)"
 fstcompose compiled/8.fst compiled/skip.fst | fstshortestpath > compiled/skip_8.fst
@@ -90,8 +100,10 @@ fstcompose compiled/8.fst compiled/skip.fst | fstshortestpath > compiled/skip_8.
 echo "Testing the transducer 'skip' with the input 'tests/62.txt' (generating pdf)"
 fstcompose compiled/62.fst compiled/skip.fst | fstshortestpath > compiled/skip_62.fst
 
+
 echo "Testing the transducer 'date2year' with the input 'tests/08_09_2013.txt' (generating pdf)"
 fstcompose compiled/08_09_2013.fst compiled/date2year.fst | fstshortestpath > compiled/date2year_08_09_2013.fst
+
 
 echo "Testing the transducer 'leap' with the input 'tests/1901.txt' (generating pdf)"
 fstcompose compiled/1901.fst compiled/leap.fst | fstshortestpath > compiled/leap_1901.fst
@@ -105,76 +117,40 @@ fstcompose compiled/2000.fst compiled/leap.fst | fstshortestpath > compiled/leap
 echo "Testing the transducer 'leap' with the input 'tests/2099.txt' (generating pdf)"
 fstcompose compiled/2099.fst compiled/leap.fst | fstshortestpath > compiled/leap_2099.fst
 
+
 echo "Testing the transducer 'R2A' with the input 'tests/I.txt' (generating pdf)"
-fstcompose compiled/I.fst compiled/R2A.fst | fstshortestpath > compiled/R2A_I.fst
+fstcompose compiled/I.fst compiled/R2A.fst | fstshortestpath > compiled/r2a_I.fst
 
 echo "Testing the transducer 'R2A' with the input 'tests/XL.txt' (generating pdf)"
-fstcompose compiled/XL.fst compiled/R2A.fst | fstshortestpath > compiled/R2A_XL.fst
+fstcompose compiled/XL.fst compiled/R2A.fst | fstshortestpath > compiled/r2a_XL.fst
 
 echo "Testing the transducer 'R2A' with the input 'tests/CM.txt' (generating pdf)"
-fstcompose compiled/CM.fst compiled/R2A.fst | fstshortestpath > compiled/R2A_CM.fst
+fstcompose compiled/CM.fst compiled/R2A.fst | fstshortestpath > compiled/r2a_CM.fst
 
 echo "Testing the transducer 'R2A' with the input 'tests/VIII.txt' (generating pdf)"
-fstcompose compiled/VIII.fst compiled/R2A.fst | fstshortestpath > compiled/R2A_VIII.fst
+fstcompose compiled/VIII.fst compiled/R2A.fst | fstshortestpath > compiled/r2a_VIII.fst
 
 echo "Testing the transducer 'R2A' with the input 'tests/CIX.txt' (generating pdf)"
-fstcompose compiled/CIX.fst compiled/R2A.fst | fstshortestpath > compiled/R2A_CIX.fst
+fstcompose compiled/CIX.fst compiled/R2A.fst | fstshortestpath > compiled/r2a_CIX.fst
 
 echo "Testing the transducer 'R2A' with the input 'tests/MMXIII.txt' (generating pdf)"
-fstcompose compiled/MMXIII.fst compiled/R2A.fst | fstshortestpath > compiled/R2A_MMXIII.fst
+fstcompose compiled/MMXIII.fst compiled/R2A.fst | fstshortestpath > compiled/r2a_MMXIII.fst
 
 echo "Testing the transducer 'R2A' with the input 'tests/MMMCMXCIX.txt' (generating pdf)"
-fstcompose compiled/MMMCMXCIX.fst compiled/R2A.fst | fstshortestpath > compiled/R2A_MMMCMXCIX.fst
+fstcompose compiled/MMMCMXCIX.fst compiled/R2A.fst | fstshortestpath > compiled/r2a_MMMCMXCIX.fst
 
-echo "Testing the transducer 'A2R' with the input 'tests/8.txt' (generating pdf)"
-fstcompose compiled/8.fst compiled/A2R.fst | fstshortestpath > compiled/A2R_8.fst
-
-echo "Testing the transducer 'A2R' with the input 'tests/109.txt' (generating pdf)"
-fstcompose compiled/109.fst compiled/A2R.fst | fstshortestpath > compiled/A2R_109.fst
-
-echo "Testing the transducer 'A2R' with the input 'tests/2013.txt' (generating pdf)"
-fstcompose compiled/2013.fst compiled/A2R.fst | fstshortestpath > compiled/A2R_2013.fst
-
-echo "Testing the transducer 'A2R' with the input 'tests/3999.txt' (generating pdf)"
-fstcompose compiled/3999.fst compiled/A2R.fst | fstshortestpath > compiled/A2R_3999.fst
-
-echo "Testing the transducer 'birthR2A' with the input 'tests/VIII.txt' (generating pdf)"
-fstcompose compiled/VIII_IX_CCCXIII.fst compiled/birthR2A.fst | fstshortestpath > compiled/birthR2A_VIII.fst
-
-echo "Testing the transducer 'birthA2T' with the input 'tests/08_09_0313.txt' (generating pdf)"
-fstcompose compiled/08_09_0313.fst compiled/birthA2T.fst | fstshortestpath > compiled/birthA2T_08_09_0313.fst
-
-echo "Testing the transducer 'birthR2L' with the input 'tests/IV_V_MMMCMXCIX.txt' (generating pdf)"
-fstcompose compiled/IV_V_MMMCMXCIX.fst compiled/birthR2L.fst | fstshortestpath > compiled/birthR2L_IV_V_MMMCMXCIX.fst
-
-echo "Testing the transducer 'birthR2A' with the input 'tests/86976birthR2A.txt' (generating pdf)"
-fstcompose compiled/86976birthR2A.fst compiled/birthR2A.fst | fstshortestpath > compiled/birthR2A_86976birthR2A.fst
-
-echo "Testing the transducer 'birthR2A' with the input 'tests/89423birthR2A.txt' (generating pdf)"
-fstcompose compiled/89423birthR2A.fst compiled/birthR2A.fst | fstshortestpath > compiled/birthR2A_89423birthR2A.fst
-
-echo "Testing the transducer 'birthA2T' with the input 'tests/86976birthA2T.txt' (generating pdf)"
-fstcompose compiled/86976birthA2T.fst compiled/birthA2T.fst | fstshortestpath > compiled/birthA2T_86976birthA2T.fst
-
-echo "Testing the transducer 'birthA2T' with the input 'tests/89423birthA2T.txt' (generating pdf)"
-fstcompose compiled/89423birthA2T.fst compiled/birthA2T.fst | fstshortestpath > compiled/birthA2T_894223birthT2R.fst
-
-echo "Testing the transducer 'birthT2R' with the input 'tests/86976birthT2R.txt' (generating pdf)"
-fstcompose compiled/86976birthT2R.fst compiled/birthT2R.fst | fstshortestpath  > compiled/birthT2R_86876birthT2R.fst
-
-echo "Testing the transducer 'birthT2R' with the input 'tests/89423birthT2R.txt' (generating pdf)"
-fstcompose compiled/89423birthT2R.fst compiled/birthT2R.fst | fstshortestpath  > compiled/birthT2R_894223birthT2R.fst
-
-echo "Testing the transducer 'birthR2L' with the input 'tests/86976birthR2L.txt' (generating pdf)"
-fstcompose compiled/86976birthR2L.fst compiled/birthR2L.fst | fstshortestpath  > compiled/birthR2L_86976birthR2L.fst
-
-echo "Testing the transducer 'birthR2L' with the input 'tests/89423birthR2L.txt' (generating pdf)"
-fstcompose compiled/89423birthR2L.fst compiled/birthR2L.fst | fstshortestpath  > compiled/birthR2L_894223birthR2L.fst
 
 for i in compiled/*.fst; do
 	echo "Creating image: images/$(basename $i '.fst').pdf"
     fstdraw --portrait --isymbols=syms.txt --osymbols=syms.txt $i | dot -Tpdf > images/$(basename $i '.fst').pdf
 done
+
+echo "Testing the transducer 'mm2mmm' with the input 'tests/test_mm2mmm.txt' (stdout)"
+fstcompose compiled/test_mm2mmm.fst compiled/mm2mmm.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+
+echo "Testing the transducer 'd2dd' with the input 'tests/test_d2dd.txt' (stdout)"
+fstcompose compiled/test_d2dd.fst compiled/d2dd.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
 echo "Testing the transducer 'd2dd' with the input 'tests/8.txt' (stdout)"
 fstcompose compiled/8.fst compiled/d2dd.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
@@ -194,6 +170,7 @@ fstcompose compiled/8000.fst compiled/d2dd.fst | fstshortestpath | fstproject --
 echo "Testing the transducer 'd2dd' with the input 'tests/876543.txt' (stdout)"
 fstcompose compiled/876543.fst compiled/d2dd.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
+
 echo "Testing the transducer 'd2dddd' with the input 'tests/8.txt' (stdout)"
 fstcompose compiled/8.fst compiled/d2dddd.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
@@ -205,6 +182,9 @@ fstcompose compiled/62.fst compiled/d2dddd.fst | fstshortestpath | fstproject --
 
 echo "Testing the transducer 'd2dddd' with the input 'tests/753.txt' (stdout)"
 fstcompose compiled/753.fst compiled/d2dddd.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+echo "Testing the transducer 'd2dddd' with the input 'tests/313.txt' (stdout)"
+fstcompose compiled/313.fst compiled/d2dddd.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
 echo "Testing the transducer 'd2dddd' with the input 'tests/8000.txt' (stdout)"
 fstcompose compiled/8000.fst compiled/d2dddd.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
@@ -218,6 +198,10 @@ fstcompose compiled/8.fst compiled/copy.fst | fstshortestpath | fstproject --pro
 
 echo "Testing the transducer 'copy' with the input 'tests/62.txt' (stdout)"
 fstcompose compiled/62.fst compiled/copy.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
+
+echo "Testing the transducer 'skip' with the input 'tests/skip.txt' (stdout)"
+fstcompose compiled/test_skip.fst compiled/skip.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
 echo "Testing the transducer 'skip' with the input 'tests/8.txt' (stdout)"
 fstcompose compiled/8.fst compiled/skip.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
@@ -278,36 +262,15 @@ echo "Testing the transducer 'A2R' with the input 'tests/3999.txt' (stdout)"
 fstcompose compiled/3999.fst compiled/A2R.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
 
-echo "Testing the transducer 'birthR2A' with the input 'tests/VIII_IX_CCCXIII.txt' (stdout)"
+echo "Testing the transducer 'birthR2A' with the input 'tests/VIII.txt' (stdout)"
 fstcompose compiled/VIII_IX_CCCXIII.fst compiled/birthR2A.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
 
 echo "Testing the transducer 'birthA2T' with the input 'tests/08_09_0313.txt' (stdout)"
 fstcompose compiled/08_09_0313.fst compiled/birthA2T.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
+echo "Testing the transducer 'birthT2R' with the input 'tests/86976.txt' (stdout)"
+fstcompose compiled/86976.fst compiled/birthT2R.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+
 echo "Testing the transducer 'birthR2L' with the input 'tests/IV_V_MMMCMXCIX.txt' (stdout)"
 fstcompose compiled/IV_V_MMMCMXCIX.fst compiled/birthR2L.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
-
-echo "Testing the transducer 'birthR2A' with the input 'tests/86976birthR2A.txt' (stdout)"
-fstcompose compiled/86976birthR2A.fst compiled/birthR2A.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
-
-echo "Testing the transducer 'birthR2A' with the input 'tests/89423birthR2A.txt' (stdout)"
-fstcompose compiled/89423birthR2A.fst compiled/birthR2A.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
-
-echo "Testing the transducer 'birthA2T' with the input 'tests/86976birthA2T.txt' (stdout)"
-fstcompose compiled/86976birthA2T.fst compiled/birthA2T.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
-
-echo "Testing the transducer 'birthA2T' with the input 'tests/89423birthA2T.txt' (stdout)"
-fstcompose compiled/89423birthA2T.fst compiled/birthA2T.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
-
-echo "Testing the transducer 'birthT2R' with the input 'tests/86976birthT2R.txt' (stdout)"
-fstcompose compiled/86976birthT2R.fst compiled/birthT2R.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
-
-echo "Testing the transducer 'birthT2R' with the input 'tests/89423birthT2R.txt' (stdout)"
-fstcompose compiled/89423birthT2R.fst compiled/birthT2R.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
-
-echo "Testing the transducer 'birthR2L' with the input 'tests/86976birthR2L.txt' (stdout)"
-fstcompose compiled/86976birthR2L.fst compiled/birthR2L.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
-
-echo "Testing the transducer 'birthR2L' with the input 'tests/89423birthR2L.txt' (stdout)"
-fstcompose compiled/89423birthR2L.fst compiled/birthR2L.fst | fstshortestpath | fstproject --project_type=output | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt

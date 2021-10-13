@@ -40,9 +40,6 @@ echo "Compiling birthR2L"
 fstcompose compiled/birthR2A.fst compiled/date2year.fst compiled/birthR2year.fst
 fstcompose compiled/birthR2year.fst compiled/leap.fst compiled/birthR2L.fst
 
-echo "Compiling mytest"
-cp compiled/birthR2L.fst compiled/mytest.fst
-
 # TODO
 
 echo "Testing the transducer 'mm2mmm' with the input 'tests/test_mm2mmm.txt' (generating pdf)"
@@ -276,6 +273,3 @@ fstcompose compiled/86976.fst compiled/birthT2R.fst | fstshortestpath | fstproje
 
 echo "Testing the transducer 'birthR2L' with the input 'tests/IV_V_MMMCMXCIX.txt' (stdout)"
 fstcompose compiled/IV_V_MMMCMXCIX.fst compiled/birthR2L.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
-
-echo "Testing the transducer 'mytest' with the input 'tests/test_mytest.txt' (stdout)"
-fstcompose compiled/test_mytest.fst compiled/mytest.fst | fstshortestpath | fstproject --project_output=true | fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt

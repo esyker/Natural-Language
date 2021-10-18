@@ -1,0 +1,44 @@
+Options Taken
+----------
+|1st Part|
+----------
+
+mm2mmm - From state 0 exist two transitions to either state 1 (when 0 is inputed) or state 2 (when 1 is inputed).
+This allows to identify the first digit according to the new state. Then on state 1 or 2, according to the second
+input digit, the textual representation of the month is outputed according to the digit in the transition to final
+state 3.
+
+d2dd -
+
+d2dddd
+
+copy
+
+skip
+
+date2year
+
+leap
+
+R2A
+
+----------
+|2nd Part|
+----------
+
+A2R
+
+birthR2A
+
+birthA2T
+
+birthT2R
+
+birthR2L
+
+----------------------------------------------
+|Estimate of the contribution of group members|
+----------------------------------------------
+
+Catarina Machuqueiro 89423 50%
+Diogo Moura 86976 50%

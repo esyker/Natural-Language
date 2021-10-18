@@ -3,38 +3,72 @@ Options Taken
 |1st Part|
 ----------
 
-mm2mmm - From state 0 exist two transitions to either state 1 (when 0 is inputed) or state 2 (when 1 is inputed).
-This allows to identify the first digit according to the new state. Then on state 1 or 2, according to the second
-input digit, the textual representation of the month is outputed according to the digit in the transition to final
+mm2mmm - From state 0, exist two transitions to either state 1 (when 0 is inputed) or state 2 (when 1 is inputed).
+This allows to identify the first digit according to the new state. Then, on state 1 or 2, according to the second
+input digit, the textual representation of the month is outputed according to the digit in the transition to the final
 state 3.
 
-d2dd -
+d2dd - The transducer accepts all the numbers with 2 or more digits leaving them unchanged since there is a transition
+from state 0 to 1, from 1 to 2 and a cycle from state 2 to itself where any inputed number is accepted and the same exact number is
+outputed. Numbers with 1 digit are also accepted but a 0 is put before the number, since there is a eps transition to state 1 
+that emits a 0 and then the transition from state 1 to 2 emits the same exact digit, leaving the digit unchanged but with a 0 before it.
+Also the eps transition from state 0 to 1 has a weight of 1 so that the other transitions are priveleged, so that numbers
+with more than 1 digit do not follow the eps transition. The numbers with less than 2 digits will first try to follow the "normal" path
+to the final state, but since that will not be possible, will then follow the transition path with the eps transition.
 
-d2dddd
+d2dddd - Similar to d2dd but instead of 3 states there are 8 states. Also, there are eps transitions from state 0 to 1, state 0 to 4,
+state 0 to 5 in order to emit respectively one, two or three zeros before the input number. Numbers with 4 or more digits follow the
+normal course of transitions (0->1->4->5->6) without any eps transition. In addition, as in the previous transducer, the eps transitions
+have increasingly higher weights according to the size of the "jump" of the eps transition so that numbers with higher number of digits
+first try the eps transitions that "jump" over the most few transitions, after trying to follow the normal course 0->1->4->5->6,
+which will only work for numbers with 4 or more digits. 
 
-copy
+copy - The transducer accepts only one digit since there is only one transition with no cycles that accepts one of the specified
+digits and emits the same exact digit.
 
-skip
+skip - The transducer accepts only one digit since there is only one transition with no cycles that accepts one of the specified
+digits and emits an eps, "skipping" that digit. 
 
-date2year
+date2year - The transducer is allowed to jump over the day and month together with the "/" separator, until it needs to reach the 
+final state where there is a cycle from this state to itself that receives a single digit and emits the exact same digit, leaving
+the year as it is. 
 
-leap
+leap - The digits that matter the most are the last two, which allow to decide wether a year is leap or not-leap. So there is a eps transition
+from state 0 to itself to skip the digits until the last two. After reaching the last two digits the year is either leap or not-leap
+if the number formed by these last two digits is a multiple of 4.
 
-R2A
+R2A - The transducer reads one digit of the Roman Number one by one and tries to find combinations of numbers through the several states,
+emitting the arabic numbers when oportune in the transitions. 
 
 ----------
 |2nd Part|
 ----------
 
-A2R
+A2R - Inversion of the R2A transducer.
 
-birthR2A
+birthR2A -  Two new auxiliar transducers are created, day and year. The first transducer is the composition of the R2A and d2dd 
+transducer, while the second one of the R2A and d2dddd. These transducers first convert from the Roman Number to Arabic and then 
+to a 2 digits number or 4 digits number respectively, to make sure that the number of digits is 2 for the day and month 
+or 4 to the year. Then there is a concatenation of the transducer day, with the copy, with the day again and with the 
+copy and finally with the year transducer concat(day,copy,day,copy,year). The copy transducer allows to mantain the "/" character 
+in the date.
 
-birthA2T
+birthA2T - A concatenation of three copy transducers is made at first, to copy the first 2 characters of the month and the "/" 
+separator. Then this transducer is concatenated the mm2mmm transducer in order to convert the month from digits to text. Finally, the 
+closure of the copy transducer is concatenated in order to copy all the 4 digits of the year. 
 
-birthT2R
+birthT2R - 2 new transducers are created, which are the dd2R and dddd2R, by composition of the inversion of respectively the d2dd and
+dddd2d with the A2R transducer. dd2R allows to convert an arabic day with 2 digits to Roman numeral and dddd2R an arabic year
+with 4 digits to roman numeral. It is first needed to use the inversion of the d2dd or d2dddd transducers in the composition 
+because the A2R transducer does not accept days or years starting with 0.  After this, the transducer mm2mmm is inverted in order 
+to create the mmm2mm transducer, which converts the month from textual to digits and this transducer is composed with the dd2R transducer
+in order to convert the 2 digits outputed by the mmm2mm transducer to Roman numeral. Finally, these transducers are concatenated in 
+the following way: concat(dd2R,copy,mmm2R,copy,dddd2R), in order to convert the whole date, with the copy transducer serving the purpose
+of copying the "/" character. 
 
-birthR2L
+birthR2L - A composition of the birthR2A transducer is made with the date2year transducer, in order to first convert the date to arabic
+and then extract the year from the arabic date. Finally, this transducer is also composed with the leap transducer in order to output
+if the year is either leap or not-leap. 
 
 ----------------------------------------------
 |Estimate of the contribution of group members|
@@ -42,3 +76,6 @@ birthR2L
 
 Catarina Machuqueiro 89423 50%
 Diogo Moura 86976 50%
+
+Catarina was responsible for making the mm2mmm, d2dd, R2A, A2R, birthR2A and birthA2T transducers.
+Diogo was responsible for making the d2dddd, copy, skip, date2year, leap, birthT2R and birthR2L transducers-

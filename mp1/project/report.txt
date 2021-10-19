@@ -23,11 +23,9 @@ have increasingly higher weights according to the size of the "jump" of the eps 
 first try the eps transitions that "jump" over the most few transitions, after trying to follow the normal course 0->1->4->5->6,
 which will only work for numbers with 4 or more digits. 
 
-copy - The transducer accepts only one digit since there is only one transition with no cycles that accepts one of the specified
-digits and emits the same exact digit.
+copy - The transducer accepts only one digit since there is only one transition with no cycles that accepts one of the specified digits and emits the same exact digit.
 
-skip - The transducer accepts only one digit since there is only one transition with no cycles that accepts one of the specified
-digits and emits an eps, "skipping" that digit. 
+skip - The transducer accepts only one digit since there is only one transition with no cycles that accepts one of the specified digits and emits an eps, "skipping" that digit. 
 
 date2year - The transducer is allowed to jump over the day and month together with the "/" separator, until it needs to reach the 
 final state where there is a cycle from this state to itself that receives a single digit and emits the exact same digit, leaving
@@ -77,5 +75,5 @@ if the year is either leap or not-leap.
 Catarina Machuqueiro 89423 50%
 Diogo Moura 86976 50%
 
-Catarina was responsible for making the mm2mmm, d2dd, R2A, A2R, birthR2A and birthA2T transducers.
-Diogo was responsible for making the d2dddd, copy, skip, date2year, leap, birthT2R and birthR2L transducers-
+Catarina was responsible for making the d2dd, d2dddd, R2A, A2R, birthR2A and birthA2T transducers.
+Diogo was responsible for making the mm2mmm, copy, skip, date2year, leap, birthT2R and birthR2L transducers.

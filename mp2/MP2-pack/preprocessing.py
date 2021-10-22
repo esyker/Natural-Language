@@ -87,7 +87,25 @@ class Preprocess:
         lemmatized_word = [wordnet_lemmatizer.lemmatize(word)for sent in nltk.sent_tokenize(text)for word in nltk.word_tokenize(sent)]
         return " ".join(lemmatized_word)
 
-
+    
+    def sklearn_tokenize(self,text):
+        lower_text = self.to_lower(text)
+        sentence_tokens = self.sentence_tokenize(lower_text)
+        return sentence_tokens
+    
+    def sklearn_preprocess(self,sentence_tokens):
+        word_list = []
+        for each_sent in sentence_tokens:
+            lemmatizzed_sent = self.lemmatize(each_sent)
+            clean_text = self.remove_numbers(lemmatizzed_sent)
+            clean_text = self.remove_punct(clean_text)
+            clean_text = self.remove_Tags(clean_text)
+            clean_text = self.remove_stopwords(clean_text)
+            word_tokens = self.word_tokenize(clean_text)
+            for i in word_tokens:
+                word_list.append(i)
+        return word_list
+    
     def preprocess(self,text):
         lower_text = self.to_lower(text)
         sentence_tokens = self.sentence_tokenize(lower_text)

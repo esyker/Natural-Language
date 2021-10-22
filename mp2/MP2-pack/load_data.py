@@ -35,7 +35,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_score
 from sklearn.metrics import f1_score
 
-vectorizer = CountVectorizer()
+vectorizer = CountVectorizer(ngram_range=(1,1))
 vector_space=np.concatenate((x_train,x_test), axis=0)
 vectors = vectorizer.fit_transform(' '.join(inner_list) for inner_list in vector_space)
 

@@ -15,13 +15,11 @@ class Load_Data:
         self.trainFile=trainFile #'./data/trainWithoutDev.txt'
         self.testFile=testFile #'./data/dev.txt'
         #load data
-        train = pd.read_csv(trainFile,index_col=False, sep='\t+', header = None)
-        dev= pd.read_csv(testFile,index_col=False, sep='\t+', header = None)
-        
+        self.train = pd.read_csv(trainFile,index_col=False, sep='\t+', header = None, engine='python')
+        self.dev= pd.read_csv(testFile,index_col=False, sep='\t+', header = None, engine='python')
         preprocesser = Preprocess()
-        
-        train[1] = train[1].apply(lambda x: preprocesser.preprocess(x))
-        dev[1] = dev[1].apply(lambda x: preprocesser.preprocess(x))
+        self.train[1] = self.train[1].apply(lambda x: preprocesser.preprocess(x))
+        self.dev[1] = self.dev[1].apply(lambda x: preprocesser.preprocess(x))
     
     def load(self):
         x_train = self.train[1].to_numpy();

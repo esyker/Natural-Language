@@ -7,11 +7,12 @@ from sklearn.metrics import precision_score
 from sklearn.metrics import f1_score
 from load_data import Load_Data 
 
-x_train, y_train , x_test, y_test = Load_Data('./data/trainWithoutDev.txt','./data/dev.txt')
+x_train, y_train , x_test, y_test = Load_Data('./data/trainWithoutDev.txt','./data/dev.txt').load()
 vectorizer = CountVectorizer(ngram_range=(1,1))
 vector_space=np.concatenate((x_train,x_test), axis=0)
 vectors = vectorizer.fit_transform(' '.join(inner_list) for inner_list in vector_space)
 
+#train/test split
 x_train_size = x_train.shape[0] 
 x_test_size =  x_test.shape[0]
 x_train = vectors[0:x_train_size]
@@ -32,5 +33,13 @@ print("NB recall score: ", recall_score(y_test, y_pred, average='weighted'))
 print("NB precision score: ", precision_score(y_test, y_pred, average=None))
 print("NB weighted f1score: ", f1_score(y_test, y_pred, average='weighted'))
 
+from sklearn.svm import SVC
+svm = SVC(gamma='auto')
+svm.fit(x_train.toarray(), y_train)
+y_pred = svm.predict(x_test.toarray())
 
-
+print("SVM accuracy:" ,accuracy_score(y_test, y_pred))
+print("SVM balanced accuracy: ", balanced_accuracy_score(y_test, y_pred))
+print("SVM recall score: ", recall_score(y_test, y_pred, average='weighted'))
+print("SVM precision score: ", precision_score(y_test, y_pred, average=None))
+print("SVM weighted f1score: ", f1_score(y_test, y_pred, average='weighted'))

@@ -1,0 +1,43 @@
+Exercicio 1
+
+Opção Correta 1
+
+Exercicio 2
+
+Resposta C
+
+Exercicio 3.1
+
+((hello)|(bye))* byebye
+
+Exercicio 3.2 hello? no fim é para poder acabar num hello
+
+(bye| hello bye | hello hello bye bye)* hello?
+
+Exercicio 4
+ ------------------------
+|     H      |    E      |
+|            |           |
+--------------------------
+|     L      |    P      |
+|            |           |
+--------------------------
+
+Exercicio 5
+
+System          A                       B
+
+TP              4                       3
+FP              2                       0
+FN              1                       2
+Precision     4/6=2/3                 3/3=1
+Recall          4/5                    3/5
+F1          2*(0.67*0.8)/(0.67+0.8)     2*1*0.6/(1+0.6)
+
+
+
+
+
+
+
+

@@ -17,9 +17,9 @@ class Load_Data:
         #load data
         self.train = pd.read_csv(trainFile,index_col=False, sep='\t+', header = None, engine='python')
         self.dev= pd.read_csv(testFile,index_col=False, sep='\t+', header = None, engine='python')
-        preprocesser = Preprocess()
-        self.train[1] = self.train[1].apply(lambda x: preprocesser.preprocess(x))
-        self.dev[1] = self.dev[1].apply(lambda x: preprocesser.preprocess(x))
+    
+    def get_data(self):
+        return self.train, self.dev
     
     def load(self):
         x_train = self.train[1].to_numpy();
@@ -28,4 +28,4 @@ class Load_Data:
         y_test = self.dev[0].to_numpy();
         return x_train, y_train, x_test, y_test
     
-
+#train, test = Load_Data('./data/trainWithoutDev.txt','./data/dev.txt' ).get_data()

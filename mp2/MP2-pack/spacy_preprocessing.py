@@ -9,7 +9,7 @@ from nltk.tokenize import word_tokenize
 from sklearn.base import TransformerMixin, BaseEstimator
 from normalise import normalise
 
-nlp = en_core_web_sm.load()
+nlp = spacy.load("en_core_web_lg")
 
 
 class TextPreprocessor(BaseEstimator, TransformerMixin):

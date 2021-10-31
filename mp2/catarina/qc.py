@@ -1,8 +1,9 @@
 import pickle
 from string import punctuation
 
+import re
 from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer, PorterStemmer, SnowballStemmer
+from nltk.stem import WordNetLemmatizer, PorterStemmer
 from nltk.tokenize import word_tokenize
 from sklearn import metrics
 from sklearn.ensemble import ExtraTreesClassifier
@@ -14,17 +15,30 @@ from sklearn.svm import SVC
 # stemmer = SnowballStemmer('english')
 stemmer = PorterStemmer()
 lemmatizer = WordNetLemmatizer()
+MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november",
+          "december"]
 
 
 def remove_punctuation(word):
     return ''.join(c for c in word if c not in punctuation)
-
 
 def remove_letter_only(word):
     if len(word) == 1 and word.isalpha():
         return ""
     return word
 
+def process_number(word):
+    if bool(re.match("(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)", word)):
+        return "roman_numeral"
+    if bool(re.match("[0-9]+(th|nd|st|rd)", word)):
+        return "cardinal_number"
+    if word.isnumeric() and len(word) == 4:
+        return "year"
+    if word.isnumeric():
+        return "number"
+    if word.lower() in MONTHS:
+        return "month"
+    return word
 
 def preprocess(tokenized_line):
     processed_line = ""
@@ -33,6 +47,7 @@ def preprocess(tokenized_line):
         if word not in stop_words:
             word = remove_punctuation(word)
             word = remove_letter_only(word)
+            word = process_number(word)
             if word:
                 word = stemmer.stem(word)
                 processed_line += word + " "
@@ -50,6 +65,7 @@ def process_data(file):
             y_data.append(tokenized_line[0])
         return x_data, y_data
 
+
 def vectorize(x_train, x_test, is_count=False):
     if is_count:
         vectorizer = CountVectorizer()
@@ -64,6 +80,11 @@ def vectorize(x_train, x_test, is_count=False):
 
 x_train, y_train = process_data("trainWithoutDev.txt")
 x_test, y_test = process_data("dev.txt")
+
+file = open('processed_trained_data.txt', 'w')
+file.writelines(x_train)
+file.close()
+
 x_train, x_test = vectorize(x_train, x_test)
 
 with open("variables.pickle", "wb") as f:

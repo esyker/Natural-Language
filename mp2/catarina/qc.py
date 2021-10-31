@@ -3,7 +3,7 @@ from string import punctuation
 
 import re
 from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer, PorterStemmer
+from nltk.stem import WordNetLemmatizer, PorterStemmer, SnowballStemmer
 from nltk.tokenize import word_tokenize
 from sklearn import metrics
 from sklearn.ensemble import ExtraTreesClassifier
@@ -14,8 +14,8 @@ from sklearn.svm import SVC
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import VotingClassifier
 
-# stemmer = SnowballStemmer('english')
-stemmer = PorterStemmer()
+stemmer = SnowballStemmer('english')
+#stemmer = PorterStemmer()
 lemmatizer = WordNetLemmatizer()
 MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november",
           "december"]

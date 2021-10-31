@@ -11,6 +11,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.linear_model import RidgeClassifier
 from sklearn.naive_bayes import ComplementNB
 from sklearn.svm import SVC
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import VotingClassifier
 
 # stemmer = SnowballStemmer('english')
 stemmer = PorterStemmer()
@@ -55,7 +57,7 @@ def preprocess(tokenized_line):
 
 
 def process_data(file):
-    with open(file, "r") as fp:
+    with open(file, "r", encoding='utf-8') as fp:
         x_data = []
         y_data = []
         for line in fp.readlines():
@@ -81,7 +83,7 @@ def vectorize(x_train, x_test, is_count=False):
 x_train, y_train = process_data("trainWithoutDev.txt")
 x_test, y_test = process_data("dev.txt")
 
-file = open('processed_trained_data.txt', 'w')
+file = open('processed_trained_data.txt', 'w', encoding='utf-8')
 file.writelines(x_train)
 file.close()
 
@@ -104,7 +106,7 @@ y_pred_et = et_classifier.predict(x_test)
 print("Accuracy ExtraTreesClassifier:", metrics.accuracy_score(y_test, y_pred_et))
 
 # Support Vector
-SVC_classifier = SVC(kernel='linear')
+SVC_classifier = SVC(kernel='linear', probability=True)
 SVC_classifier.fit(x_train, y_train)
 y_pred_SVC = SVC_classifier.predict(x_test)
 print("Accuracy SVC:", metrics.accuracy_score(y_test, y_pred_SVC))
@@ -113,3 +115,15 @@ ridge_classifier = RidgeClassifier()
 ridge_classifier.fit(x_train, y_train)
 y_pred_ridge = ridge_classifier.predict(x_test)
 print("Accuracy RidgeClassifier:", metrics.accuracy_score(y_test, y_pred_ridge))
+
+adaboost_classifier = AdaBoostClassifier(n_estimators=100)
+adaboost_classifier.fit(x_train,y_train)
+y_pred_adaboost = ridge_classifier.predict(x_test)
+print("Accuracy AdaboostClassifier:", metrics.accuracy_score(y_test, y_pred_adaboost))
+
+voting_classifier = VotingClassifier(estimators=[('nb', NB_classifier), ('et', et_classifier), 
+                                     ('svc', SVC_classifier), ('ada',adaboost_classifier)]
+                         , voting='soft', weights=[3,1,4,2],flatten_transform=True)
+voting_classifier.fit(x_train,y_train)
+y_pred_voting_classifier = voting_classifier.predict(x_test)
+print("Accuracy VotingClassifier:", metrics.accuracy_score(y_test, y_pred_voting_classifier))

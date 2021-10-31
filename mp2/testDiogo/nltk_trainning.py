@@ -9,12 +9,12 @@ from sklearn.metrics import f1_score
 from load_data import Load_Data 
 from nltk_preprocessing import Preprocess
 
-
+"""
 import sys
 orig_stdout = sys.stdout
 f = open('out.txt', 'w')
 sys.stdout = f
-
+"""
 
 #Load Data
 print("Loading Data")
@@ -59,7 +59,7 @@ x_test = vectorizer.fit_transform(x_test).toarray()
 
     
 
-"""
+
 #train data
 print("Trainning NB")
 from sklearn.naive_bayes import GaussianNB
@@ -86,7 +86,7 @@ print("RF balanced accuracy: ", balanced_accuracy_score(y_test, y_pred))
 print("RF recall score: ", recall_score(y_test, y_pred, average='weighted'))
 print("RF precision score: ", precision_score(y_test, y_pred, average=None))
 print("RF weighted f1score: ", f1_score(y_test, y_pred, average='weighted'))
-"""
+
 
 print("Trainning SVC")
 from sklearn.svm import SVC

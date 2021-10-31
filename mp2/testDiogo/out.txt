@@ -1,6 +1,18 @@
 Loading Data
 Getting the vocabulary
 Vectorizing
+Trainning NB
+NB accuracy: 0.478
+NB balanced accuracy:  0.5226501954148004
+NB recall score:  0.478
+NB precision score:  [0.30526316 0.65217391 0.45882353 0.44318182 0.64      ]
+NB weighted f1score:  0.4701184027389356
+Trainning RF
+RF accuracy: 0.7
+RF balanced accuracy:  0.7159509609488101
+RF recall score:  0.7
+RF precision score:  [0.425      0.72222222 0.8220339  0.80722892 0.65591398]
+RF weighted f1score:  0.705989965140114
 Trainning SVC
 SVM accuracy: 0.808
 SVM balanced accuracy:  0.8120554811425874

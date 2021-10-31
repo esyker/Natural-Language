@@ -122,8 +122,9 @@ y_pred_adaboost = ridge_classifier.predict(x_test)
 print("Accuracy AdaboostClassifier:", metrics.accuracy_score(y_test, y_pred_adaboost))
 
 voting_classifier = VotingClassifier(estimators=[('nb', NB_classifier), ('et', et_classifier), 
-                                     ('svc', SVC_classifier), ('ada',adaboost_classifier)]
-                         , voting='soft', weights=[3,1,4,2],flatten_transform=True)
+                                     ('svc', SVC_classifier), ('ada',adaboost_classifier), 
+                                     ('ridge',ridge_classifier)]
+                         , voting='hard', weights=[1,1,1,1,1],flatten_transform=True)
 voting_classifier.fit(x_train,y_train)
 y_pred_voting_classifier = voting_classifier.predict(x_test)
 print("Accuracy VotingClassifier:", metrics.accuracy_score(y_test, y_pred_voting_classifier))

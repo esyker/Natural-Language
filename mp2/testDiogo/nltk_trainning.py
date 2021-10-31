@@ -45,67 +45,14 @@ def get_vocabulary(x_train,x_test, preprocessor):
                 token_count+=1
     return vocabulary
 
-"""
-def get_vocabulary_tags_tokens(x_train,x_test, preprocessor):
-    vocabulary = dict()
-    tags = dict()
-    tags_test = []
-    tags_train = []
-    tokens_train = []
-    tokens_test = []
-    token_count = 0
-    tag_count = 0
-    for sentence in x_train:
-        tagged_sentence = preprocessor.preprocess_tokenize_pos_tag(sentence)
-        sentence_tokens = list()
-        sentence_tags = list()
-        for item in tagged_sentence:
-            if item[0] not in vocabulary:
-                vocabulary[item[0]] = token_count
-                token_count+=1
-            sentence_tokens.append(item[0])
-            if tags.get(item[1])== None:
-                tags[item[1]]=tag_count
-                tag_count+=1
-            sentence_tags.append(tags[item[1]])
-        tokens_train.append(sentence_tokens)
-        tags_train.append(sentence_tags)
-    for sentence in x_test:
-        tagged_sentence = preprocessor.preprocess_tokenize_pos_tag(sentence)
-        sentence_tokens = list()
-        sentence_tags = list()
-        for item in tagged_sentence:
-            if item[0] not in vocabulary:
-                vocabulary[item[0]] = token_count
-                token_count+=1
-            sentence_tokens.append(item[0])
-            if tags.get(item[1])== None:
-                tags[item[1]]=tag_count
-                tag_count+=1
-            sentence_tags.append(tags[item[1]])
-        tokens_test.append(sentence_tokens)
-        tags_test.append(sentence_tags)
-    return vocabulary, tokens_train, tokens_test, tags_train, tags_test
-
-vocabulary, tokens_train, tokens_test, tags_train, tags_test = get_vocabulary_tags_tokens(x_train, x_test, preprocessor)
-"""
-
 #Vectorize
 print("Vectorizing")
-#vectorizer = TfidfVectorizer(tokenizer=lambda x: preprocessor.word_tokenize(x),
-#            preprocessor=lambda x: preprocessor.preprocess(x),
-#                             ngram_range=(1,2),vocabulary=vocabulary)
 
 vocabulary = get_vocabulary(x_train, x_test, preprocessor)
+
 vectorizer = TfidfVectorizer(tokenizer=lambda x: preprocessor.tokenize_pos_tag(x),
             preprocessor=lambda x: preprocessor.preprocess(x),
                              ngram_range=(1,2),vocabulary=vocabulary)
-
-#vectorizer = TfidfVectorizer(vocabulary=vocabulary, lowercase=False,
-#                             analyzer='word', tokenizer= lambda x: x , preprocessor=None)
-
-#for i in range(len(tokens_train)):
-#    for j in range(len(tokens_train[i])):
         
 x_train = vectorizer.fit_transform(x_train).toarray()
 x_test = vectorizer.fit_transform(x_test).toarray()

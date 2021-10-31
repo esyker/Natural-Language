@@ -3,6 +3,8 @@ import re
 from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer
 from nltk.stem import WordNetLemmatizer
+from nltk import pos_tag
+from sklearn.preprocessing import LabelEncoder
 from string import punctuation
 from autocorrect import spell
 
@@ -106,7 +108,15 @@ class Preprocess:
                 word_list.append(i)
         return word_list
         """
-        
-    def preprocess_tokenize(self,text):
+    def tokenize_pos_tag(self,text):
+        tokens = self.word_tokenize(text)
+        tokens_pos_tagged = pos_tag(tokens)
+        for i in range(len(tokens_pos_tagged)):
+            tokens[i]=tokens_pos_tagged[i][0]+tokens_pos_tagged[i][0]
+        return tokens
+    
+    def preprocess_tokenize_pos_tag(self,text):
         clean_text = self.preprocess(text)
-        return self.word_tokenize(clean_text)
+        tokens = self.word_tokenize(clean_text)
+        tokens_pos_tagged = pos_tag(tokens)
+        return tokens_pos_tagged

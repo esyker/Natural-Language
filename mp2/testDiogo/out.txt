@@ -1,0 +1,9 @@
+Loading Data
+Getting the vocabulary
+Vectorizing
+Trainning SVC
+SVM accuracy: 0.808
+SVM balanced accuracy:  0.8120554811425874
+SVM recall score:  0.808
+SVM precision score:  [0.68627451 0.79432624 0.82926829 0.82075472 0.86075949]
+SVM weighted f1score:  0.8085727248206644

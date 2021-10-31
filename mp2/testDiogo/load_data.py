@@ -21,7 +21,7 @@ class Load_Data:
     def get_data(self):
         return self.train, self.dev
     
-    def load(self):
+    def get_numpy_array(self):
         x_train = self.train[1].to_numpy();
         y_train = self.train [0].to_numpy();
         x_test = self.dev[1].to_numpy();

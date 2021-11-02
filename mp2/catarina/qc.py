@@ -100,7 +100,7 @@ NB_classifier.fit(x_train, y_train)
 y_pred_NB = NB_classifier.predict(x_test)
 print("Accuracy ComplementNB:", metrics.accuracy_score(y_test, y_pred_NB))
 
-et_classifier = ExtraTreesClassifier()
+et_classifier = ExtraTreesClassifier(n_jobs=-1)
 et_classifier.fit(x_train, y_train)
 y_pred_et = et_classifier.predict(x_test)
 print("Accuracy ExtraTreesClassifier:", metrics.accuracy_score(y_test, y_pred_et))
@@ -110,6 +110,7 @@ SVC_classifier = SVC(kernel='linear', probability=True)
 SVC_classifier.fit(x_train, y_train)
 y_pred_SVC = SVC_classifier.predict(x_test)
 print("Accuracy SVC:", metrics.accuracy_score(y_test, y_pred_SVC))
+sys.stdout.flush()
 
 ridge_classifier = RidgeClassifier()
 ridge_classifier.fit(x_train, y_train)
@@ -124,7 +125,40 @@ print("Accuracy AdaboostClassifier:", metrics.accuracy_score(y_test, y_pred_adab
 voting_classifier = VotingClassifier(estimators=[('nb', NB_classifier), ('et', et_classifier), 
                                      ('svc', SVC_classifier), ('ada',adaboost_classifier), 
                                      ('ridge',ridge_classifier)]
-                         , voting='hard', weights=[1,1,1,1,1],flatten_transform=True)
+                         , voting='hard', weights=[1,1,1,1,1],flatten_transform=True, n_jobs=-1)
 voting_classifier.fit(x_train,y_train)
 y_pred_voting_classifier = voting_classifier.predict(x_test)
 print("Accuracy VotingClassifier:", metrics.accuracy_score(y_test, y_pred_voting_classifier))
+
+#####################
+#CROSS_VALIDATION####
+#####################
+
+from sklearn.model_selection import cross_val_score
+#import numpy as np
+
+from scipy import sparse
+
+print("Trainning with Cross-Validation")
+X = sparse.vstack([x_train, x_test])
+Y = y_train +  y_test
+#X = np.concatenate((x_train, x_test), axis=0)
+#Y = np.concatenate((y_train, y_test), axis=0)
+scores_NB = cross_val_score(NB_classifier, X, Y, cv=20)
+print("NB %0.2f accuracy with a standard deviation of %0.2f" % (scores_NB.mean(), scores_NB.std()))
+scores_ET = cross_val_score(et_classifier, X, Y, cv=20)
+print("ET %0.2f accuracy with a standard deviation of %0.2f" % (scores_ET.mean(), scores_ET.std()))
+scores_SVC = cross_val_score(SVC_classifier, X, Y, cv=20)
+print("SVC %0.2f accuracy with a standard deviation of %0.2f" % (scores_SVC.mean(), scores_SVC.std()))
+scores_ridge = cross_val_score(ridge_classifier, X, Y, cv=20)
+print("ridge %0.2f accuracy with a standard deviation of %0.2f" % (scores_ridge.mean(), scores_ridge.std()))
+scores_adaboost = cross_val_score(adaboost_classifier, X, Y, cv=20)
+print("adaboost %0.2f accuracy with a standard deviation of %0.2f" % (scores_adaboost.mean(), scores_adaboost.std()))
+#without adaboost_classifier
+voting_classifier = VotingClassifier(estimators=[('nb', NB_classifier), ('et', et_classifier), 
+                                     ('svc', SVC_classifier),('ridge',ridge_classifier)]
+                         , voting='hard', weights=[1,1,1,1],flatten_transform=True, n_jobs=-1)
+scores_voting = cross_val_score(voting_classifier, X, Y, cv=20)
+print("voting %0.2f accuracy with a standard deviation of %0.2f" % (scores_voting.mean(), scores_voting.std()))
+
+

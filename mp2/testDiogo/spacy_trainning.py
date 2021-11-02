@@ -1,13 +1,8 @@
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import  LogisticRegressionCV
-from spacy_preprocessing import TextPreprocessor
-# ... assuming data split X_train, X_test ...
+import spacy
 
-clf  = Pipeline(steps=[
-        ('normalize': TextPreprocessor(n_jobs=-1), 
-        ('features', TfidfVectorizer(ngram_range=(1, 2), sublinear_tf=True)),
-        ('classifier', LogisticRegressionCV(cv=5,solver='saga',scoring='accuracy', n_jobs=-1, verbose=1))
-    ])
+nlp = spacy.load("en_core_web_lm")
+doc = nlp("Apple is looking at buying U.K. startup for $1 billion")
 
-clf.fit(X_train, y_train)
-clf.predict(X_test)
+for token in doc:
+    print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_,
+            token.shape_, token.is_alpha, token.is_stop)

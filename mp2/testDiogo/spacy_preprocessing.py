@@ -1,82 +1,126 @@
-import numpy as np
-import pandas as pd
-import multiprocessing as mp
+import re
+from typing import List
 
-import string
-import spacy 
-import en_core_web_sm
-from nltk.tokenize import word_tokenize
-from sklearn.base import TransformerMixin, BaseEstimator
-from normalise import normalise
-
-nlp = spacy.load("en_core_web_lg")
+import spacy
+from spacy.tokens import Doc
+from tqdm import tqdm
 
 
-class TextPreprocessor(BaseEstimator, TransformerMixin):
-    def __init__(self,
-                 variety="BrE",
-                 user_abbrevs={},
-                 n_jobs=1):
+class SpacyPreprocessor:
+    def __init__(
+        self,
+        spacy_model=None,
+        remove_numbers=False,
+        remove_special=True,
+        pos_to_remove=None,
+        remove_stopwords=False,
+        lemmatize=False,
+    ):
         """
-        Text preprocessing transformer includes steps:
-            1. Text normalization
-            2. Punctuation removal
-            3. Stop words removal
-            4. Lemmatization
-
-        variety - format of date (AmE - american type, BrE - british format) 
-        user_abbrevs - dict of user abbreviations mappings (from normalise package)
-        n_jobs - parallel jobs to run
+        Preprocesses text using spaCy
+        :param remove_numbers: Whether to remove numbers from text
+        :param remove_stopwords: Whether to remove stopwords from text
+        :param remove_special: Whether to remove special characters (including numbers)
+        :param pos_to_remove: list of PoS tags to remove
+        :param lemmatize:  Whether to apply lemmatization
         """
-        self.variety = variety
-        self.user_abbrevs = user_abbrevs
-        self.n_jobs = n_jobs
 
-    def fit(self, X, y=None):
-        return self
-    
-    def transform(self, X, *_):
-        X_copy = X.copy()
+        self._remove_numbers = remove_numbers
+        self._pos_to_remove = pos_to_remove
+        self._remove_stopwords = remove_stopwords
+        self._remove_special = remove_special
+        self._lemmatize = lemmatize
 
-        partitions = 1
-        cores = mp.cpu_count()
-        if self.n_jobs <= -1:
-            partitions = cores
-        elif self.n_jobs <= 0:
-            return X_copy.apply(self._preprocess_text)
+        if not spacy_model:
+            self.model = spacy.load("en_core_web_lg")
         else:
-            partitions = min(self.n_jobs, cores)
+            self.model = spacy_model
 
-        data_split = np.array_split(X_copy, partitions)
-        pool = mp.Pool(cores)
-        data = pd.concat(pool.map(self._preprocess_part, data_split))
-        pool.close()
-        pool.join()
+    @staticmethod
+    def download_spacy_model(model="en_core_web_lg"):
+        print(f"Downloading spaCy model {model}")
+        spacy.cli.download(model)
+        print(f"Finished downloading model")
 
-        return data
+    @staticmethod
+    def load_model(model="en_core_web_lg"):
+        return spacy.load(model, disable=["ner", "parser"])
 
-    def _preprocess_part(self, part):
-        return part.apply(self._preprocess_text)
+    def tokenize(self, text) -> List[str]:
+        """
+        Tokenize text using a spaCy pipeline
+        :param text: Text to tokenize
+        :return: list of str
+        """
+        doc = self.model(text)
+        return [token.text for token in doc]
 
-    def _preprocess_text(self, text):
-        normalized_text = self._normalize(text)
-        doc = nlp(normalized_text)
-        removed_punct = self._remove_punct(doc)
-        removed_stop_words = self._remove_stop_words(removed_punct)
-        return self._lemmatize(removed_stop_words)
+    def preprocess_text(self, text) -> str:
+        """
+        Runs a spaCy pipeline and removes unwanted parts from text
+        :param text: text string to clean
+        :return: str, clean text
+        """
+        doc = self.model(text)
+        return self.__clean(doc)
 
-    def _normalize(self, text):
-        # some issues in normalise package
-        try:
-            return ' '.join(normalise(text, variety=self.variety, user_abbrevs=self.user_abbrevs, verbose=False))
-        except:
-            return text
+    def preprocess_text_list(self, texts=List[str]) -> List[str]:
+        """
+        Runs a spaCy pipeline and removes unwantes parts from a list of text.
+        Leverages spaCy's `pipe` for faster batch processing.
+        :param texts: List of texts to clean
+        :return: List of clean texts
+        """
+        clean_texts = []
+        for doc in tqdm(self.model.pipe(texts)):
+            clean_texts.append(self.__clean(doc))
 
-    def _remove_punct(self, doc):
-        return [t for t in doc if t.text not in string.punctuation]
+        return clean_texts
 
-    def _remove_stop_words(self, doc):
-        return [t for t in doc if not t.is_stop]
+    def __clean(self, doc: Doc) -> str:
 
-    def _lemmatize(self, doc):
-        return ' '.join([t.lemma_ for t in doc])
+        tokens = []
+        # POS Tags removal
+        if self._pos_to_remove:
+            for token in doc:
+                if token.pos_ not in self._pos_to_remove:
+                    tokens.append(token)
+        else:
+            tokens = doc
+
+        # Remove Numbers
+        if self._remove_numbers:
+            tokens = [
+                token for token in tokens if not (token.like_num or token.is_currency)
+            ]
+
+        # Remove Stopwords
+        if self._remove_stopwords:
+            tokens = [token for token in tokens if not token.is_stop]
+        # remove unwanted tokens
+        tokens = [
+            token
+            for token in tokens
+            if not (
+                token.is_punct or token.is_space or token.is_quote or token.is_bracket
+            )
+        ]
+
+        # Remove empty tokens
+        tokens = [token.lower() for token in tokens if token.text.strip() != ""]
+
+        # Lemmatize
+        if self._lemmatize:
+            text = " ".join([token.lemma_+token.pos_ for token in tokens])
+        else:
+            text = " ".join([token.text for token in tokens])
+
+
+        return text
+
+
+if __name__ == "__main__":
+    spacy_model = SpacyPreprocessor.load_model()
+    preprocessor = SpacyPreprocessor(spacy_model=spacy_model, lemmatize=True, remove_numbers=True)
+    clean_text = preprocessor.preprocess_text("spaCy is awesome! 123")
+    print(clean_text)

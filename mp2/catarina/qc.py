@@ -110,7 +110,6 @@ SVC_classifier = SVC(kernel='linear', probability=True)
 SVC_classifier.fit(x_train, y_train)
 y_pred_SVC = SVC_classifier.predict(x_test)
 print("Accuracy SVC:", metrics.accuracy_score(y_test, y_pred_SVC))
-sys.stdout.flush()
 
 ridge_classifier = RidgeClassifier()
 ridge_classifier.fit(x_train, y_train)

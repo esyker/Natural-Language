@@ -73,8 +73,8 @@ def process_data(file):
 def vectorize(x_train, x_test, is_count=False):
     if is_count:
         vectorizer = CountVectorizer()
-        x_train = vectorizer.fit_transform(x_train).toarray()
-        x_test = vectorizer.transform(x_test).toarray()
+        x_train = vectorizer.fit_transform(x_train)
+        x_test = vectorizer.transform(x_test)
     else:
         vectorizer = TfidfVectorizer(sublinear_tf=True, tokenizer = lambda x: x
                             , stop_words =None , lowercase = False)
@@ -82,15 +82,26 @@ def vectorize(x_train, x_test, is_count=False):
         x_test = vectorizer.transform(x_test)
     return x_train, x_test
 
+def vectorize_single(X, is_count = False):
+    if is_count:
+        vectorizer = CountVectorizer()
+        X = vectorizer.fit_transform(X)
+    else:
+        vectorizer = TfidfVectorizer(sublinear_tf=True, tokenizer = lambda x: x
+                            , stop_words =None , lowercase = False)
+        X = vectorizer.fit_transform(X)
+    return X
+
 
 x_train, y_train = process_data("trainWithoutDev.txt")
 x_test, y_test = process_data("dev.txt")
+
 
 #file = open('processed_trained_data.txt', 'w', encoding='utf-8')
 #file.writelines(x_train)
 #file.close()
 
-x_train, x_test = vectorize(x_train, x_test)
+#x_train, x_test = vectorize(x_train, x_test)
 
 with open("variables.pickle", "wb") as f:
     pickle.dump([x_train, y_train, x_test, y_test], f)
@@ -106,13 +117,11 @@ SVC_classifier = SVC(kernel='linear', probability=True)
 
 ridge_classifier = RidgeClassifier()
 
-adaboost_classifier = AdaBoostClassifier(n_estimators=100)
-
 voting_classifier = VotingClassifier(estimators=[('nb', NB_classifier), ('et', et_classifier), 
-                                     ('svc', SVC_classifier), ('ada',adaboost_classifier), 
-                                     ('ridge',ridge_classifier)]
-                         , voting='hard', weights=[1,1,1,1,1],flatten_transform=True, n_jobs=-1)
+                                     ('svc', SVC_classifier), ('ridge',ridge_classifier)]
+                         , voting='hard', weights=[1,1,1,1],flatten_transform=True, n_jobs=-1)
 
+"""
 NB_classifier.fit(x_train, y_train)
 y_pred_NB = NB_classifier.predict(x_test)
 print("Accuracy ComplementNB:", metrics.accuracy_score(y_test, y_pred_NB))
@@ -137,37 +146,32 @@ print("Accuracy AdaboostClassifier:", metrics.accuracy_score(y_test, y_pred_adab
 voting_classifier.fit(x_train,y_train)
 y_pred_voting_classifier = voting_classifier.predict(x_test)
 print("Accuracy VotingClassifier:", metrics.accuracy_score(y_test, y_pred_voting_classifier))
-
+"""
 
 #####################
 #CROSS_VALIDATION####
 #####################
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
-#import numpy as np
-
-from scipy import sparse
 
 print("Trainning with Cross-Validation")
-X = sparse.vstack([x_train, x_test])
+
+X = x_train + x_test
+X = vectorize_single(X)
 Y = y_train +  y_test
-kfold = KFold(n_splits=4, shuffle=True, random_state=None)
+kfold = KFold(n_splits=5, shuffle=True, random_state=1)
+
+#experimental_setups = [{'prep':'no'},{'prep':'Snowball'},{'prep:']
 
 scores_NB = cross_val_score(NB_classifier, X, Y, cv=kfold)
 print("NB %0.2f accuracy with a standard deviation of %0.2f" % (scores_NB.mean(), scores_NB.std()))
+"""
 scores_ET = cross_val_score(et_classifier, X, Y, cv=kfold)
 print("ET %0.2f accuracy with a standard deviation of %0.2f" % (scores_ET.mean(), scores_ET.std()))
 scores_SVC = cross_val_score(SVC_classifier, X, Y, cv=kfold)
 print("SVC %0.2f accuracy with a standard deviation of %0.2f" % (scores_SVC.mean(), scores_SVC.std()))
 scores_ridge = cross_val_score(ridge_classifier, X, Y, cv=kfold)
 print("ridge %0.2f accuracy with a standard deviation of %0.2f" % (scores_ridge.mean(), scores_ridge.std()))
-scores_adaboost = cross_val_score(adaboost_classifier, X, Y, cv=kfold)
-print("adaboost %0.2f accuracy with a standard deviation of %0.2f" % (scores_adaboost.mean(), scores_adaboost.std()))
-#without adaboost_classifier
-#voting_classifier = VotingClassifier(estimators=[('nb', NB_classifier), ('et', et_classifier), 
-#                                     ('svc', SVC_classifier),('ridge',ridge_classifier)]
-#                         , voting='hard', weights=[1,1,1,1],flatten_transform=True, n_jobs=-1)
 scores_voting = cross_val_score(voting_classifier, X, Y, cv=kfold)
 print("voting %0.2f accuracy with a standard deviation of %0.2f" % (scores_voting.mean(), scores_voting.std()))
-
-
+"""

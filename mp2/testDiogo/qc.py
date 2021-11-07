@@ -11,7 +11,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.linear_model import RidgeClassifier
 from sklearn.naive_bayes import ComplementNB
 from sklearn.svm import SVC
-from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import VotingClassifier
 
 stemmer = SnowballStemmer('english')
@@ -96,19 +95,6 @@ def vectorize_single(X, is_count = False):
 x_train, y_train = process_data("trainWithoutDev.txt")
 x_test, y_test = process_data("dev.txt")
 
-
-#file = open('processed_trained_data.txt', 'w', encoding='utf-8')
-#file.writelines(x_train)
-#file.close()
-
-#x_train, x_test = vectorize(x_train, x_test)
-
-with open("variables.pickle", "wb") as f:
-    pickle.dump([x_train, y_train, x_test, y_test], f)
-
-# with open('variables.pickle', 'rb') as f:
-#     x_train, y_train, x_test, y_test = pickle.load(f)
-
 NB_classifier = ComplementNB()
 
 et_classifier = ExtraTreesClassifier(n_jobs=-1)
@@ -121,7 +107,66 @@ voting_classifier = VotingClassifier(estimators=[('nb', NB_classifier), ('et', e
                                      ('svc', SVC_classifier), ('ridge',ridge_classifier)]
                          , voting='hard', weights=[1,1,1,1],flatten_transform=True, n_jobs=-1)
 
+#####################
+#CROSS_VALIDATION####
+#####################
+from sklearn.model_selection import KFold
+from sklearn.model_selection import cross_validate
+
+print("Trainning with Cross-Validation")
+
+X = x_train + x_test
+X = vectorize_single(X)
+Y = y_train +  y_test
+kfold = KFold(n_splits=5, shuffle=True, random_state=1)
+scoring = {'acc': 'accuracy', 'bal. acc': 'balanced_accuracy', 'prec.': 'precision_macro'
+                   , 'recall' : 'recall_macro'}
+
+#experimental_setups = [{'prep':'no'},{'prep':'Snowball'},{'prep:']
+
+def print_scores(scores, name):
+    print("-------",name," --------\n" )
+    print("Avg. Acc ",scores_NB['test_acc'].mean(), " sd: ", scores_NB['test_acc'].std())
+    print("Avg. Bal. Acc ",scores_NB['test_bal. acc'].mean(), " sd: ", scores_NB['test_bal. acc'].std())
+    print("Avg. Precision ",scores_NB['test_prec.'].mean(), " sd: ", scores_NB['test_prec.'].std())
+    print("Avg. Recall ",scores_NB['test_recall'].mean(), " sd: ", scores_NB['test_recall'].std())
+
+scores_NB = cross_validate(NB_classifier, X, Y, cv=kfold, scoring = scoring)
+print_scores(scores_NB, "scores_NB")
+
+scores_ET = cross_validate(et_classifier, X, Y, cv=kfold, scoring = scoring)
+print_scores(scores_ET, "scores_ET")
+
+scores_SVC = cross_validate(SVC_classifier, X, Y, cv=kfold, scoring = scoring)
+print_scores(scores_SVC, "scores_SVC")
+
+scores_ridge = cross_validate(ridge_classifier, X, Y, cv=kfold, scoring = scoring)
+print_scores(scores_ridge, "scores_RIDGE")
+
+scores_voting = cross_validate(voting_classifier, X, Y, cv=kfold, scoring = scoring)
+print_scores(scores_voting, "scores_VOTING")
+
+
 """
+#################################################
+#FINAL RESULTS: NO CROSS_VALIDATION !!!!!!!!!####
+#################################################
+
+x_train, y_train = process_data("trainWithoutDev.txt")
+x_test, y_test = process_data("dev.txt")
+
+
+#file = open('processed_trained_data.txt', 'w', encoding='utf-8')
+#file.writelines(x_train)
+#file.close()
+
+x_train, x_test = vectorize(x_train, x_test)
+
+#with open("variables.pickle", "wb") as f:
+#    pickle.dump([x_train, y_train, x_test, y_test], f)
+# with open('variables.pickle', 'rb') as f:
+#     x_train, y_train, x_test, y_test = pickle.load(f)
+
 NB_classifier.fit(x_train, y_train)
 y_pred_NB = NB_classifier.predict(x_test)
 print("Accuracy ComplementNB:", metrics.accuracy_score(y_test, y_pred_NB))
@@ -139,39 +184,7 @@ ridge_classifier.fit(x_train, y_train)
 y_pred_ridge = ridge_classifier.predict(x_test)
 print("Accuracy RidgeClassifier:", metrics.accuracy_score(y_test, y_pred_ridge))
 
-adaboost_classifier.fit(x_train,y_train)
-y_pred_adaboost = ridge_classifier.predict(x_test)
-print("Accuracy AdaboostClassifier:", metrics.accuracy_score(y_test, y_pred_adaboost))
-
 voting_classifier.fit(x_train,y_train)
 y_pred_voting_classifier = voting_classifier.predict(x_test)
 print("Accuracy VotingClassifier:", metrics.accuracy_score(y_test, y_pred_voting_classifier))
-"""
-
-#####################
-#CROSS_VALIDATION####
-#####################
-from sklearn.model_selection import KFold
-from sklearn.model_selection import cross_val_score
-
-print("Trainning with Cross-Validation")
-
-X = x_train + x_test
-X = vectorize_single(X)
-Y = y_train +  y_test
-kfold = KFold(n_splits=5, shuffle=True, random_state=1)
-
-#experimental_setups = [{'prep':'no'},{'prep':'Snowball'},{'prep:']
-
-scores_NB = cross_val_score(NB_classifier, X, Y, cv=kfold)
-print("NB %0.2f accuracy with a standard deviation of %0.2f" % (scores_NB.mean(), scores_NB.std()))
-"""
-scores_ET = cross_val_score(et_classifier, X, Y, cv=kfold)
-print("ET %0.2f accuracy with a standard deviation of %0.2f" % (scores_ET.mean(), scores_ET.std()))
-scores_SVC = cross_val_score(SVC_classifier, X, Y, cv=kfold)
-print("SVC %0.2f accuracy with a standard deviation of %0.2f" % (scores_SVC.mean(), scores_SVC.std()))
-scores_ridge = cross_val_score(ridge_classifier, X, Y, cv=kfold)
-print("ridge %0.2f accuracy with a standard deviation of %0.2f" % (scores_ridge.mean(), scores_ridge.std()))
-scores_voting = cross_val_score(voting_classifier, X, Y, cv=kfold)
-print("voting %0.2f accuracy with a standard deviation of %0.2f" % (scores_voting.mean(), scores_voting.std()))
 """

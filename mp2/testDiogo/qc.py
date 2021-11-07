@@ -19,7 +19,6 @@ lemmatizer = WordNetLemmatizer()
 MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november",
           "december"]
 
-
 def remove_punctuation(word):
     return ''.join(c for c in word if c not in punctuation)
 
@@ -55,7 +54,16 @@ def preprocess(tokenized_line):
                 tokens.append(word)
     return tokens
 
-
+def read_data(file):
+    with open(file, "r", encoding='utf-8') as fp:
+        x_data = []
+        y_data = []
+        for line in fp.readlines():
+            tokens = line.split()
+            x_data.append(' '.join(token for token in tokens[1:]))
+            y_data.append(tokens[0])
+        return x_data, y_data
+    
 def process_data(file):
     with open(file, "r", encoding='utf-8') as fp:
         x_data = []
@@ -91,10 +99,21 @@ def vectorize_single(X, is_count = False):
         X = vectorizer.fit_transform(X)
     return X
 
-
+#read the data
+#no preprocessing
+x_train, y_train = read_data("trainWithoutDev.txt")
+x_test, y_test = process_data("dev.txt")
+X_noprep = x_train + x_test
+X_noprep = vectorize_single(X_noprep)
+Y_noprep = y_train +  y_test
+#preprocessing
 x_train, y_train = process_data("trainWithoutDev.txt")
 x_test, y_test = process_data("dev.txt")
+X_prep = x_train + x_test
+X_prep = vectorize_single(X_prep)
+Y_prep = y_train +  y_test
 
+#classifiers
 NB_classifier = ComplementNB()
 
 et_classifier = ExtraTreesClassifier(n_jobs=-1)
@@ -115,15 +134,24 @@ from sklearn.model_selection import cross_validate
 
 print("Trainning with Cross-Validation")
 
-X = x_train + x_test
-X = vectorize_single(X)
-Y = y_train +  y_test
 kfold = KFold(n_splits=5, shuffle=True, random_state=1)
 scoring = {'acc': 'accuracy', 'bal. acc': 'balanced_accuracy', 'prec.': 'precision_macro'
                    , 'recall' : 'recall_macro'}
 
-#experimental_setups = [{'prep':'no'},{'prep':'Snowball'},{'prep:']
+experimental_setups = [{'prep': False,'classifiers':['all']},
+                       {'prep':'Snowball'},{'prep:'}]
 
+"""
+def experimental_setup(experimental_setups):
+    no_prec = {'x_train' = x_train, }
+    x_train_no_prec = x_train
+    x_train_no_prec = x_train
+    x_train_no_prec = x_train
+    x_train_no_prec = x_train
+    for es in experimental_setups:
+       if(es[])     
+"""          
+    
 def print_scores(scores, name):
     print("-------",name," --------\n" )
     print("Avg. Acc ",scores_NB['test_acc'].mean(), " sd: ", scores_NB['test_acc'].std())
@@ -131,19 +159,19 @@ def print_scores(scores, name):
     print("Avg. Precision ",scores_NB['test_prec.'].mean(), " sd: ", scores_NB['test_prec.'].std())
     print("Avg. Recall ",scores_NB['test_recall'].mean(), " sd: ", scores_NB['test_recall'].std())
 
-scores_NB = cross_validate(NB_classifier, X, Y, cv=kfold, scoring = scoring)
+scores_NB = cross_validate(NB_classifier, X_prep, Y_prep, cv=kfold, scoring = scoring)
 print_scores(scores_NB, "scores_NB")
 
-scores_ET = cross_validate(et_classifier, X, Y, cv=kfold, scoring = scoring)
+scores_ET = cross_validate(et_classifier, X_prep, Y_prep, cv=kfold, scoring = scoring)
 print_scores(scores_ET, "scores_ET")
 
-scores_SVC = cross_validate(SVC_classifier, X, Y, cv=kfold, scoring = scoring)
+scores_SVC = cross_validate(SVC_classifier, X_prep , Y_prep, cv=kfold, scoring = scoring)
 print_scores(scores_SVC, "scores_SVC")
 
-scores_ridge = cross_validate(ridge_classifier, X, Y, cv=kfold, scoring = scoring)
+scores_ridge = cross_validate(ridge_classifier, X_prep , Y_prep, cv=kfold, scoring = scoring)
 print_scores(scores_ridge, "scores_RIDGE")
 
-scores_voting = cross_validate(voting_classifier, X, Y, cv=kfold, scoring = scoring)
+scores_voting = cross_validate(voting_classifier, X_prep, Y_prep, cv=kfold, scoring = scoring)
 print_scores(scores_voting, "scores_VOTING")
 
 

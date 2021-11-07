@@ -40,37 +40,45 @@ def process_number(word):
         return "month"
     return word
 
-def preprocess(tokenized_line):
+def preprocess(tokenized_line, proc = 'Snowball', stop_words_ = False, punctuation_ = False,
+               proc_number = True, lower = True):
+    if(not bool(proc)):
+        return tokenized_line
+    processor = None
+    if(proc == 'Snowball'):
+        processor = SnowballStemmer('english')
+    elif(proc == 'Porter'):
+        processor = PorterStemmer()
+    elif(proc == 'Lemmatizer'):
+        processor = WordNetLemmatizer()
     stop_words = stopwords.words("english")
     tokens=[]
     for word in tokenized_line:
         if word not in stop_words:
-            word = remove_punctuation(word)
+            if(not punctuation_):
+                word = remove_punctuation(word)
             word = remove_letter_only(word)
-            word = process_number(word)
-            word = word.lower()
+            if(proc_number):
+                word = process_number(word)
+            if(lower):
+                word = word.lower()
             if word:
-                word = stemmer.stem(word)
+                if(proc == 'Lemmatizer'):
+                    word = processor.lemmatize(word)
+                else:
+                    word = processor.stem(word)
                 tokens.append(word)
     return tokens
-
-def read_data(file):
-    with open(file, "r", encoding='utf-8') as fp:
-        x_data = []
-        y_data = []
-        for line in fp.readlines():
-            tokens = line.split()
-            x_data.append(' '.join(token for token in tokens[1:]))
-            y_data.append(tokens[0])
-        return x_data, y_data
     
-def process_data(file):
+def process_data(file, proc = 'Snowball', stop_words_ = False, punctuation_ = False,
+               proc_number = True, lower = True):
     with open(file, "r", encoding='utf-8') as fp:
         x_data = []
         y_data = []
         for line in fp.readlines():
             tokenized_line = word_tokenize(line)
-            tokens = preprocess(tokenized_line[1:])
+            tokens = preprocess(tokenized_line[1:], proc, stop_words_, punctuation_,
+                                proc_number, lower)
             label = tokenized_line[0]
             x_data.append(tokens)
             y_data.append(label)
@@ -91,40 +99,38 @@ def vectorize(x_train, x_test, is_count=False):
 
 def vectorize_single(X, is_count = False):
     if is_count:
-        vectorizer = CountVectorizer()
+        vectorizer = CountVectorizer(tokenizer = lambda x: x, stop_words =None , 
+                                     lowercase = False)
         X = vectorizer.fit_transform(X)
     else:
-        vectorizer = TfidfVectorizer(sublinear_tf=True, tokenizer = lambda x: x
+        vectorizer = TfidfVectorizer(sublinear_tf=False, tokenizer = lambda x: x
                             , stop_words =None , lowercase = False)
         X = vectorizer.fit_transform(X)
     return X
 
 #read the data
-#no preprocessing
-x_train, y_train = read_data("trainWithoutDev.txt")
-x_test, y_test = process_data("dev.txt")
-X_noprep = x_train + x_test
-X_noprep = vectorize_single(X_noprep)
-Y_noprep = y_train +  y_test
 #preprocessing
-x_train, y_train = process_data("trainWithoutDev.txt")
-x_test, y_test = process_data("dev.txt")
+x_train, y_train = process_data("trainWithoutDev.txt", proc = 'Porter')
+x_test, y_test = process_data("dev.txt", proc = 'Porter')
 X_prep = x_train + x_test
 X_prep = vectorize_single(X_prep)
 Y_prep = y_train +  y_test
+
+X = X_prep
+Y = Y_prep
 
 #classifiers
 NB_classifier = ComplementNB()
 
 et_classifier = ExtraTreesClassifier(n_jobs=-1)
 
-SVC_classifier = SVC(kernel='linear', probability=True)
+SVC_classifier = SVC(kernel='linear')
 
 ridge_classifier = RidgeClassifier()
 
 voting_classifier = VotingClassifier(estimators=[('nb', NB_classifier), ('et', et_classifier), 
                                      ('svc', SVC_classifier), ('ridge',ridge_classifier)]
-                         , voting='hard', weights=[1,1,1,1],flatten_transform=True, n_jobs=-1)
+                         , voting='hard', weights=[1,1,1,1],flatten_transform=True, n_jobs=1)
 
 #####################
 #CROSS_VALIDATION####
@@ -134,46 +140,34 @@ from sklearn.model_selection import cross_validate
 
 print("Trainning with Cross-Validation")
 
-kfold = KFold(n_splits=5, shuffle=True, random_state=1)
+kfold = KFold(n_splits=5, shuffle=False)
 scoring = {'acc': 'accuracy', 'bal. acc': 'balanced_accuracy', 'prec.': 'precision_macro'
                    , 'recall' : 'recall_macro'}
 
-experimental_setups = [{'prep': False,'classifiers':['all']},
-                       {'prep':'Snowball'},{'prep:'}]
-
-"""
-def experimental_setup(experimental_setups):
-    no_prec = {'x_train' = x_train, }
-    x_train_no_prec = x_train
-    x_train_no_prec = x_train
-    x_train_no_prec = x_train
-    x_train_no_prec = x_train
-    for es in experimental_setups:
-       if(es[])     
-"""          
-    
 def print_scores(scores, name):
     print("-------",name," --------\n" )
-    print("Avg. Acc ",scores_NB['test_acc'].mean(), " sd: ", scores_NB['test_acc'].std())
-    print("Avg. Bal. Acc ",scores_NB['test_bal. acc'].mean(), " sd: ", scores_NB['test_bal. acc'].std())
-    print("Avg. Precision ",scores_NB['test_prec.'].mean(), " sd: ", scores_NB['test_prec.'].std())
-    print("Avg. Recall ",scores_NB['test_recall'].mean(), " sd: ", scores_NB['test_recall'].std())
+    print("Avg. Precision ", round(scores['test_prec.'].mean(),3), " sd: ", round(scores['test_prec.'].std(),3))
+    print("Avg. Recall ",round(scores['test_recall'].mean(),3), " sd: ", round(scores['test_recall'].std(),3))
+    print("Avg. Acc ",round(scores['test_acc'].mean(),3), " sd: ", round(scores['test_acc'].std(),3))
+    print("Avg. Bal. Acc ",round(scores['test_bal. acc'].mean(),3), " sd: ", round(scores['test_bal. acc'].std(),3))
+    
 
-scores_NB = cross_validate(NB_classifier, X_prep, Y_prep, cv=kfold, scoring = scoring)
+
+scores_NB = cross_validate(NB_classifier, X, Y, cv=kfold, scoring = scoring)
 print_scores(scores_NB, "scores_NB")
 
-scores_ET = cross_validate(et_classifier, X_prep, Y_prep, cv=kfold, scoring = scoring)
+scores_ET = cross_validate(et_classifier, X, Y, cv=kfold, scoring = scoring)
 print_scores(scores_ET, "scores_ET")
 
-scores_SVC = cross_validate(SVC_classifier, X_prep , Y_prep, cv=kfold, scoring = scoring)
+scores_SVC = cross_validate(SVC_classifier, X , Y, cv=kfold, scoring = scoring)
 print_scores(scores_SVC, "scores_SVC")
 
-scores_ridge = cross_validate(ridge_classifier, X_prep , Y_prep, cv=kfold, scoring = scoring)
+scores_ridge = cross_validate(ridge_classifier, X , Y, cv=kfold, scoring = scoring)
 print_scores(scores_ridge, "scores_RIDGE")
 
-scores_voting = cross_validate(voting_classifier, X_prep, Y_prep, cv=kfold, scoring = scoring)
-print_scores(scores_voting, "scores_VOTING")
 
+scores_voting = cross_validate(voting_classifier, X, Y, cv=kfold, scoring = scoring)
+print_scores(scores_voting, "scores_VOTING")
 
 """
 #################################################

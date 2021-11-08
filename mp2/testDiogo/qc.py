@@ -13,9 +13,6 @@ from sklearn.naive_bayes import ComplementNB
 from sklearn.svm import SVC
 from sklearn.ensemble import VotingClassifier
 
-stemmer = SnowballStemmer('english')
-#stemmer = PorterStemmer()
-lemmatizer = WordNetLemmatizer()
 MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november",
           "december"]
 
@@ -40,7 +37,7 @@ def process_number(word):
         return "month"
     return word
 
-def preprocess(tokenized_line, proc = 'Snowball', stop_words_ = False, punctuation_ = False,
+def preprocess(tokenized_line, proc = 'Snowball', keep_stop_words = True, punctuation_remove = True,
                proc_number = True, lower = True):
     if(not bool(proc)):
         return tokenized_line
@@ -54,8 +51,8 @@ def preprocess(tokenized_line, proc = 'Snowball', stop_words_ = False, punctuati
     stop_words = stopwords.words("english")
     tokens=[]
     for word in tokenized_line:
-        if word not in stop_words:
-            if(not punctuation_):
+        if(keep_stop_words or (word not in stop_words)):#default is no stop-word removal
+            if(punctuation_remove):#default is punctuation removal
                 word = remove_punctuation(word)
             word = remove_letter_only(word)
             if(proc_number):
@@ -70,14 +67,14 @@ def preprocess(tokenized_line, proc = 'Snowball', stop_words_ = False, punctuati
                 tokens.append(word)
     return tokens
     
-def process_data(file, proc = 'Snowball', stop_words_ = False, punctuation_ = False,
+def process_data(file, proc = 'Snowball', keep_stop_words = True, punctuation_remove = True,
                proc_number = True, lower = True):
     with open(file, "r", encoding='utf-8') as fp:
         x_data = []
         y_data = []
         for line in fp.readlines():
             tokenized_line = word_tokenize(line)
-            tokens = preprocess(tokenized_line[1:], proc, stop_words_, punctuation_,
+            tokens = preprocess(tokenized_line[1:], proc, keep_stop_words, punctuation_remove,
                                 proc_number, lower)
             label = tokenized_line[0]
             x_data.append(tokens)
@@ -87,7 +84,8 @@ def process_data(file, proc = 'Snowball', stop_words_ = False, punctuation_ = Fa
 
 def vectorize(x_train, x_test, is_count=False):
     if is_count:
-        vectorizer = CountVectorizer()
+        vectorizer = CountVectorizer(tokenizer = lambda x: x, stop_words =None , 
+                                     lowercase = False)
         x_train = vectorizer.fit_transform(x_train)
         x_test = vectorizer.transform(x_test)
     else:
@@ -103,23 +101,12 @@ def vectorize_single(X, is_count = False):
                                      lowercase = False)
         X = vectorizer.fit_transform(X)
     else:
-        vectorizer = TfidfVectorizer(sublinear_tf=False, tokenizer = lambda x: x
+        vectorizer = TfidfVectorizer(sublinear_tf=True, tokenizer = lambda x: x
                             , stop_words =None , lowercase = False)
         X = vectorizer.fit_transform(X)
     return X
 
-#read the data
-#preprocessing
-"""
-x_train, y_train = process_data("trainWithoutDev.txt", proc = 'Porter')
-x_test, y_test = process_data("dev.txt", proc = 'Porter')
-X_prep = x_train + x_test
-X_prep = vectorize_single(X_prep)
-Y_prep = y_train +  y_test
 
-X = X_prep
-Y = Y_prep
-"""
 #classifiers
 NB_classifier = ComplementNB()
 
@@ -137,36 +124,42 @@ voting_classifier = VotingClassifier(estimators=[('nb', NB_classifier), ('et', e
 #####################
 #CROSS_VALIDATION####
 #####################
+
+x_train, y_train = process_data("trainWithoutDev.txt")
+x_test, y_test = process_data("dev.txt")
+X_prep = x_train + x_test
+X_prep = vectorize_single(X_prep)
+Y_prep = y_train +  y_test
+X = X_prep
+Y = Y_prep
+
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_validate
 
 print("Trainning with Cross-Validation")
 
 kfold = KFold(n_splits=5, shuffle=False)
-scoring = {'acc': 'accuracy', 'bal. acc': 'balanced_accuracy', 'prec.': 'precision_macro'
-                   , 'recall' : 'recall_macro'}
+scoring = ['accuracy', 'balanced_accuracy','f1_macro']
 
 def print_scores(scores, name):
     print("-------",name," --------\n" )
-    print("Avg. Precision ", round(scores['test_prec.'].mean(),3), " sd: ", round(scores['test_prec.'].std(),3))
-    print("Avg. Recall ",round(scores['test_recall'].mean(),3), " sd: ", round(scores['test_recall'].std(),3))
-    print("Avg. Acc ",round(scores['test_acc'].mean(),3), " sd: ", round(scores['test_acc'].std(),3))
-    print("Avg. Bal. Acc ",round(scores['test_bal. acc'].mean(),3), " sd: ", round(scores['test_bal. acc'].std(),3))
-    
+    print("Avg. Acc ", round(scores['test_accuracy'].mean(),3), " sd: ", round(scores['test_accuracy'].std(),3))
+    print("Avg. Bal. Acc ",round(scores['test_balanced_accuracy'].mean(),3), " sd: ", round(scores['test_balanced_accuracy'].std(),3))
+    print("Avg. f1-score ",round(scores['test_f1_macro'].mean(),3), " sd: ", round(scores['test_f1_macro'].std(),3))
+        
 
+scores_ridge = cross_validate(ridge_classifier, X , Y, cv=kfold, scoring = scoring)
+print_scores(scores_ridge, "scores_RIDGE")
+
+scores_SVC = cross_validate(SVC_classifier, X , Y, cv=kfold, scoring = scoring)
+
+print_scores(scores_SVC, "scores_SVC")
 
 scores_NB = cross_validate(NB_classifier, X, Y, cv=kfold, scoring = scoring)
 print_scores(scores_NB, "scores_NB")
 
 scores_ET = cross_validate(et_classifier, X, Y, cv=kfold, scoring = scoring)
 print_scores(scores_ET, "scores_ET")
-
-scores_SVC = cross_validate(SVC_classifier, X , Y, cv=kfold, scoring = scoring)
-print_scores(scores_SVC, "scores_SVC")
-
-scores_ridge = cross_validate(ridge_classifier, X , Y, cv=kfold, scoring = scoring)
-print_scores(scores_ridge, "scores_RIDGE")
-
 
 scores_voting = cross_validate(voting_classifier, X, Y, cv=kfold, scoring = scoring)
 print_scores(scores_voting, "scores_VOTING")
@@ -176,33 +169,42 @@ print_scores(scores_voting, "scores_VOTING")
 #FINAL RESULTS: NO CROSS_VALIDATION !!!!!!!!!####
 #################################################
 
-x_train, y_train = process_data("trainWithoutDev.txt", proc = False)
-x_test, y_test = process_data("dev.txt", proc = False)
-
-x_train, x_test = vectorize(x_train, x_test)
-
-NB_classifier.fit(x_train, y_train)
-y_pred_NB = NB_classifier.predict(x_test)
-print("Accuracy ComplementNB:", metrics.accuracy_score(y_test, y_pred_NB))
-
-et_classifier.fit(x_train, y_train)
-y_pred_et = et_classifier.predict(x_test)
-print("Accuracy ExtraTreesClassifier:", metrics.accuracy_score(y_test, y_pred_et))
-
-# Support Vector
-SVC_classifier.fit(x_train, y_train)
-y_pred_SVC = SVC_classifier.predict(x_test)
-print("Accuracy SVC:", metrics.accuracy_score(y_test, y_pred_SVC))
-
-ridge_classifier.fit(x_train, y_train)
-y_pred_ridge = ridge_classifier.predict(x_test)
-print("Accuracy RidgeClassifier:", metrics.accuracy_score(y_test, y_pred_ridge))
-
 x_train, y_train = process_data("trainWithoutDev.txt")
 x_test, y_test = process_data("dev.txt")
 
 x_train, x_test = vectorize(x_train, x_test)
 
+print("Trainning without Cross-Validation")
+
+ridge_classifier.fit(x_train, y_train)
+y_pred_ridge = ridge_classifier.predict(x_test)
+print("Accuracy Ridge:", metrics.accuracy_score(y_test, y_pred_ridge),
+      "Balanced Accuracy Ridge:", metrics.balanced_accuracy_score(y_test, y_pred_ridge),
+      "F1-Score Ridge:", metrics.f1_score(y_test, y_pred_ridge, average='macro'))
+
+# Support Vector
+SVC_classifier.fit(x_train, y_train)
+y_pred_SVC = SVC_classifier.predict(x_test)
+print("Accuracy SVC:", metrics.accuracy_score(y_test, y_pred_SVC),
+      "Balanced Accuracy SVC:", metrics.balanced_accuracy_score(y_test, y_pred_SVC),
+      "F1-Score SVC:", metrics.f1_score(y_test, y_pred_SVC, average='macro'))
+
+NB_classifier.fit(x_train, y_train)
+y_pred_NB = NB_classifier.predict(x_test)
+print("Accuracy ComplementNB:", metrics.accuracy_score(y_test, y_pred_NB),
+      "Balanced Accuracy NB:", metrics.balanced_accuracy_score(y_test, y_pred_NB),
+      "F1-Score NB:", metrics.f1_score(y_test, y_pred_NB, average='macro'))
+
+et_classifier.fit(x_train, y_train)
+y_pred_et = et_classifier.predict(x_test)
+print("Accuracy ET:", metrics.accuracy_score(y_test, y_pred_et),
+      "Balanced Accuracy ET:", metrics.balanced_accuracy_score(y_test, y_pred_et),
+      "F1-Score ET:", metrics.f1_score(y_test, y_pred_et, average='macro'))
+
+
+
 voting_classifier.fit(x_train,y_train)
 y_pred_voting_classifier = voting_classifier.predict(x_test)
-print("Accuracy VotingClassifier:", metrics.accuracy_score(y_test, y_pred_voting_classifier))
+print("Accuracy Voting:", metrics.accuracy_score(y_test, y_pred_voting_classifier),
+      "Balanced Accuracy Voting:", metrics.balanced_accuracy_score(y_test, y_pred_voting_classifier),
+      "F1-Score Voting:", metrics.f1_score(y_test, y_pred_voting_classifier, average='macro'))

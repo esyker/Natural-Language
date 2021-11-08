@@ -110,6 +110,7 @@ def vectorize_single(X, is_count = False):
 
 #read the data
 #preprocessing
+"""
 x_train, y_train = process_data("trainWithoutDev.txt", proc = 'Porter')
 x_test, y_test = process_data("dev.txt", proc = 'Porter')
 X_prep = x_train + x_test
@@ -118,7 +119,7 @@ Y_prep = y_train +  y_test
 
 X = X_prep
 Y = Y_prep
-
+"""
 #classifiers
 NB_classifier = ComplementNB()
 
@@ -196,6 +197,11 @@ print("Accuracy SVC:", metrics.accuracy_score(y_test, y_pred_SVC))
 ridge_classifier.fit(x_train, y_train)
 y_pred_ridge = ridge_classifier.predict(x_test)
 print("Accuracy RidgeClassifier:", metrics.accuracy_score(y_test, y_pred_ridge))
+
+x_train, y_train = process_data("trainWithoutDev.txt")
+x_test, y_test = process_data("dev.txt")
+
+x_train, x_test = vectorize(x_train, x_test)
 
 voting_classifier.fit(x_train,y_train)
 y_pred_voting_classifier = voting_classifier.predict(x_test)

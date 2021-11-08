@@ -132,6 +132,7 @@ voting_classifier = VotingClassifier(estimators=[('nb', NB_classifier), ('et', e
                                      ('svc', SVC_classifier), ('ridge',ridge_classifier)]
                          , voting='hard', weights=[1,1,1,1],flatten_transform=True, n_jobs=1)
 
+"""
 #####################
 #CROSS_VALIDATION####
 #####################
@@ -168,26 +169,16 @@ print_scores(scores_ridge, "scores_RIDGE")
 
 scores_voting = cross_validate(voting_classifier, X, Y, cv=kfold, scoring = scoring)
 print_scores(scores_voting, "scores_VOTING")
-
 """
+
 #################################################
 #FINAL RESULTS: NO CROSS_VALIDATION !!!!!!!!!####
 #################################################
 
-x_train, y_train = process_data("trainWithoutDev.txt")
-x_test, y_test = process_data("dev.txt")
-
-
-#file = open('processed_trained_data.txt', 'w', encoding='utf-8')
-#file.writelines(x_train)
-#file.close()
+x_train, y_train = process_data("trainWithoutDev.txt", proc = False)
+x_test, y_test = process_data("dev.txt", proc = False)
 
 x_train, x_test = vectorize(x_train, x_test)
-
-#with open("variables.pickle", "wb") as f:
-#    pickle.dump([x_train, y_train, x_test, y_test], f)
-# with open('variables.pickle', 'rb') as f:
-#     x_train, y_train, x_test, y_test = pickle.load(f)
 
 NB_classifier.fit(x_train, y_train)
 y_pred_NB = NB_classifier.predict(x_test)
@@ -209,4 +200,3 @@ print("Accuracy RidgeClassifier:", metrics.accuracy_score(y_test, y_pred_ridge))
 voting_classifier.fit(x_train,y_train)
 y_pred_voting_classifier = voting_classifier.predict(x_test)
 print("Accuracy VotingClassifier:", metrics.accuracy_score(y_test, y_pred_voting_classifier))
-"""
